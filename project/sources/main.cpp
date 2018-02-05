@@ -10,4 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <iostream>
 
+int main(int argc, char **argv) {
+
+	(void)argv;
+
+	if (argc == 2) {
+		std::cout << "arguments" << std::endl;
+	} else if (argc == 1) {
+		std::cout << "standard entry" << std::endl;
+	}
+}
