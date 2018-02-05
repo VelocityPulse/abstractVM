@@ -12,6 +12,7 @@
 
 #include <iostream>
 
+
 int main(int argc, char **argv) {
 
 	(void)argv;
@@ -20,5 +21,7 @@ int main(int argc, char **argv) {
 		std::cout << "arguments" << std::endl;
 	} else if (argc == 1) {
 		std::cout << "standard entry" << std::endl;
+	} else {
+		std::cout << "bad entry" << std::end;
 	}
 }
