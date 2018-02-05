@@ -12,6 +12,14 @@
 
 #include <iostream>
 
+void manageStandardEntry() {
+	std::string line;
+
+	while (std::getline(std::cin, line)) {
+		std::cout << "line : " + line << std::endl;
+	}
+	std::cout << "end of line" << std::endl;
+}
 
 int main(int argc, char **argv) {
 
@@ -20,8 +28,11 @@ int main(int argc, char **argv) {
 	if (argc == 2) {
 		std::cout << "arguments" << std::endl;
 	} else if (argc == 1) {
+
+		manageStandardEntry();
+
 		std::cout << "standard entry" << std::endl;
 	} else {
-		std::cout << "bad entry" << std::end;
+		std::cout << "bad entry" << std::endl;
 	}
 }
