@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <iostream>
+#include "../includes/AbstractVM.hpp"
 
 void manageStandardEntry() {
 	std::string line;
@@ -24,6 +25,10 @@ void manageStandardEntry() {
 int main(int argc, char **argv) {
 
 	(void)argv;
+
+	AbstractVM avm;
+
+	avm.createOperand(Int16, "43");
 
 	if (argc == 2) {
 		std::cout << "arguments" << std::endl;

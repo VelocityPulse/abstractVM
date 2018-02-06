@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <list>
 #include "IOperand.hpp"
 
 class AbstractVM {
@@ -35,8 +36,9 @@ public:
 	AbstractVM &operator=(AbstractVM const &copy); // Canonical
 
 private:
-	std::vector<IOperand const (*AbstractVM::*)(std::string const &)> createPointerTab;
-	std::vector<float> lol;
+	typedef const IOperand *(AbstractVM::*OperandFunc)(const std::string &) const;
+
+	std::vector<OperandFunc> createPointerTab;
 
 };
 
