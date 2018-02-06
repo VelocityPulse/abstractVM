@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
 #include "../includes/AbstractVM.hpp"
 
 void manageStandardEntry() {
@@ -24,20 +23,20 @@ void manageStandardEntry() {
 
 int main(int argc, char **argv) {
 
-	(void)argv;
 
 	AbstractVM avm;
 
-	avm.createOperand(Int16, "43");
+	IOperand const *operand = avm.createOperand(Int8, "2440");
+	std::cout << "[" + operand->toString() + "]" << std::endl;
 
-	if (argc == 2) {
-		std::cout << "arguments" << std::endl;
-	} else if (argc == 1) {
-
-		manageStandardEntry();
-
-		std::cout << "standard entry" << std::endl;
-	} else {
-		std::cout << "bad entry" << std::endl;
-	}
+	return 0;
+//	if (argc == 2) {
+//		std::cout << "arguments" << std::endl;
+//	} else if (argc == 1) {
+//		manageStandardEntry();
+//		std::cout << "standard entry" << std::endl;
+//	} else {
+//		std::cout << "bad entry" << std::endl;
+//	}
+//	return 1;
 }

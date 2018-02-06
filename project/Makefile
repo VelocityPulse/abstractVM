@@ -6,7 +6,7 @@
 #    By: cchameyr <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/05 10:57:06 by cchameyr          #+#    #+#              #
-#    Updated: 2018/02/06 10:25:31 by cchameyr         ###   ########.fr        #
+#    Updated: 2018/02/06 14:42:18 by cchameyr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,19 +15,19 @@ OBJECTS_NAME_FOLDER = objects
 SOURCES_NAME_FOLDER = sources
 
 FILES =				main.cpp \
-					AbstractVM.cpp 
+					AbstractVM.cpp	
 
 SRCS =				$(addprefix $(SOURCES_NAME_FOLDER)/, $(FILES))
 
 OBJS =				$(addprefix $(OBJECTS_NAME_FOLDER)/, $(FILES:.cpp=.o))
 
-CC =				clang++
+CC =				g++ -std=c++11
 
 NAME =				avm
 
 DEBUGSEGFAULT =		-g3 -fsanitize=address
 
-FLAGS =				#-Wall -Wextra -Werror #$(DEBUGSEGFAULT)
+FLAGS =				$(DEBUGSEGFAULT) #-Wall -Wextra -Werror #$(DEBUGSEGFAULT)
 
 RM =				rm -rf
 

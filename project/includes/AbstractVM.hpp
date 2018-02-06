@@ -9,14 +9,15 @@
 /*   Updated: 2018/02/05 15:51:47 by cchameyr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef ABSTRACTVM_ABSTRACTVM_HPP
 #define ABSTRACTVM_ABSTRACTVM_HPP
 
+#include <iostream>
 #include <string>
 #include <vector>
-#include <map>
-#include <list>
 #include "IOperand.hpp"
+#include "Operand.tpp"
 
 class AbstractVM {
 
@@ -24,7 +25,6 @@ public:
 	AbstractVM(); // Canonical
 	AbstractVM(AbstractVM const &copy); // Canonical
 	~AbstractVM(); // Canonical
-
 
 	IOperand const * createOperand( eOperandType type, std::string const & value ) const;
 	IOperand const * createInt8( std::string const & value ) const;
@@ -37,7 +37,6 @@ public:
 
 private:
 	typedef const IOperand *(AbstractVM::*OperandFunc)(const std::string &) const;
-
 	std::vector<OperandFunc> createPointerTab;
 
 };
