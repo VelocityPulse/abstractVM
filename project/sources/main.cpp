@@ -23,10 +23,9 @@ void manageStandardEntry() {
 
 int main(int argc, char **argv) {
 
-
 	AbstractVM avm;
 
-	IOperand const *operand = avm.createOperand(Int8, "2440");
+	IOperand const *operand = avm.createOperand(Int16, "2440");
 	std::cout << "[" + operand->toString() + "]" << std::endl;
 
 	return 0;
