@@ -27,7 +27,7 @@ NAME =				avm
 
 DEBUGSEGFAULT =		-g3 -fsanitize=address
 
-FLAGS =				$(DEBUGSEGFAULT) #-Wall -Wextra -Werror #$(DEBUGSEGFAULT)
+FLAGS =				#-Wall -Wextra -Werror #$(DEBUGSEGFAULT)
 
 RM =				rm -rf
 
@@ -54,6 +54,9 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+ree: re
+	./$(NAME)
 
 r: objs_rm
 	$(RM) $(NAME)

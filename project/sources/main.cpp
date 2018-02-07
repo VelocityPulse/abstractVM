@@ -27,8 +27,7 @@ int main(int argc, char **argv) {
 
 	IOperand const *operand = avm.createOperand(Int16, "2440");
 	std::cout << "[" + operand->toString() + "]" << std::endl;
-
-	return 0;
+    
 //	if (argc == 2) {
 //		std::cout << "arguments" << std::endl;
 //	} else if (argc == 1) {
@@ -37,5 +36,6 @@ int main(int argc, char **argv) {
 //	} else {
 //		std::cout << "bad entry" << std::endl;
 //	}
+    std::cout << "end of program" << std::endl;
 //	return 1;
 }
