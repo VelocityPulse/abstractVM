@@ -51,7 +51,6 @@ void AbstractVM::parseCommand(std::string prompt) {
 
 	// test existing command
 	MapCommandIterator it = this->_commandMap.find(split[0]);
-	MapCommandIterator end = this->_commandMap.end();
 	if (it == this->_commandMap.end()) {
 		throw AbstractVMException("Command not found");
 	}
@@ -64,6 +63,9 @@ void AbstractVM::parseCommand(std::string prompt) {
 	} else {
 		throw AbstractVMException("Invalid command");
 	}
+
+	//TODO 12 Feb 2018 04:29 make a system for parse "int8(n)" "int16(n)" "double(z)" etc...
+
 }
 
 void AbstractVM::executeCommand(std::string cmd) {
