@@ -37,23 +37,43 @@ AbstractVM::AbstractVM() {
 /* *************** PARSING *************** */
 
 void AbstractVM::parseCommand(std::string prompt) {
+	if (AbstractVM::_debugFlag) {
+		std::cout << "AbstractVM::parseCommand(std::string prompt)" << std::endl;
+	}
+
+	// split
 	std::vector<std::string> split = stringSplit(prompt, ' ');
-//	if (split.size() == 2 && !isDouble(split[1])) {
-//		throw AbstractVMException("Invalid command argument");
-//	} else {
-//		std::cout << "number : " + split[1] << std::endl;
-//	}
+
+	// size security
+	if (split.size() < 1) {
+		throw AbstractVMException("Invalid command");
+	}
+
+	// test existing command
+	std::map<std::string, TypeCommandFunction>::iterator it = this->_commandMap.find(split[0]);
+	if (it == this->_commandMap.end()) {
+		throw AbstractVMException("Command not found");
+	}
+
+	// calling execute command
 	if (split.size() == 1) {
-		std::map<std::string, TypeCommandFunction>::iterator it = this->_commandMap.find(prompt);
-		if (it != this->_commandMap.end()) {
-			(this->*(it)->second)();
-		} else {
-			throw AbstractVMException("Command not found");
-		}
+		executeCommand(split[0]);
 	} else if (split.size() == 2) {
-		push();
+		executeCommand(split[0], split[1]);
 	} else {
 		throw AbstractVMException("Invalid command");
+	}
+}
+
+void AbstractVM::executeCommand(std::string cmd) {
+	if (AbstractVM::_debugFlag) {
+		std::cout << "AbstractVM::executeCommand(std::string)" << std::endl;
+	}
+}
+
+void AbstractVM::executeCommand(std::string cmd, std::string value) {
+	if (AbstractVM::_debugFlag) {
+		std::cout << "AbstractVM::executeCommand(std::string cmd, std::string value)" << std::endl;
 	}
 }
 
@@ -64,28 +84,38 @@ IOperand const *AbstractVM::createOperand(eOperandType type, std::string const &
 }
 
 IOperand const *AbstractVM::createInt8(std::string const &value) const {
-	std::cout << "create Int 8 : [" + value + "]" << std::endl;
+	if (AbstractVM::_debugFlag) {
+		std::cout << "create Int 8 : [" + value + "]" << std::endl;
+	}
 	//TODO 06 Feb 2018 02:52 check if throw is required when > than max int8 or < than min int8
 	return new Operand<char>(Int8, static_cast<char>(stoi(value)));
 }
 
 IOperand const *AbstractVM::createInt16(std::string const &value) const {
-	std::cout << "create Int 16 : [" + value + "]" << std::endl;
+	if (AbstractVM::_debugFlag) {
+		std::cout << "create Int 16 : [" + value + "]" << std::endl;
+	}
 	return new Operand<short>(Int16, static_cast<short>(stoi(value)));
 }
 
 IOperand const *AbstractVM::createInt32(std::string const &value) const {
-	std::cout << "create Int 32 : [" + value + "]" << std::endl;
+	if (AbstractVM::_debugFlag) {
+		std::cout << "create Int 32 : [" + value + "]" << std::endl;
+	}
 	return new Operand<int>(Int32, stoi(value));
 }
 
 IOperand const *AbstractVM::createFloat(std::string const &value) const {
-	std::cout << "create Float : [" + value + "]" << std::endl;
+	if (AbstractVM::_debugFlag) {
+		std::cout << "create Float : [" + value + "]" << std::endl;
+	}
 	return new Operand<float>(Float, std::stof(value));
 }
 
 IOperand const *AbstractVM::createDouble(std::string const &value) const {
-	std::cout << "create Double : [" + value + "]" << std::endl;
+	if (AbstractVM::_debugFlag) {
+		std::cout << "create Double : [" + value + "]" << std::endl;
+	}
 	return new Operand<double>(Double, std::stod(value));
 }
 
@@ -97,7 +127,7 @@ std::ostream &operator<<(std::ostream &o, IOperand const &rhs) {
 /* *************** COMMANDS *************** */
 
 void AbstractVM::push() {
-	throw AbstractVMException("test to remove");
+	throw AbstractVMException("push throw test");
 
 	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : push command" << std::endl;
@@ -198,11 +228,11 @@ std::string AbstractVM::stringTrim(const std::string &str) {
 
 std::vector<std::string> AbstractVM::stringSplit(const std::string &string, char c) {
 	std::vector<std::string> split;
-	char * pch;
-	pch = strtok (const_cast<char *>(string.c_str()), &c);
+	char *pch;
+	pch = strtok(const_cast<char *>(string.c_str()), &c);
 	while (pch != NULL) {
 		split.push_back(pch);
-		pch = strtok (NULL, &c);
+		pch = strtok(NULL, &c);
 	}
 	return split;
 }
