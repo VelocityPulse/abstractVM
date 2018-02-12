@@ -22,86 +22,24 @@ AbstractVM::AbstractVM() {
 	this->createPointerTab.push_back(&AbstractVM::createFloat);
 	this->createPointerTab.push_back(&AbstractVM::createDouble);
     this->commandMap["push"] = &AbstractVM::push;
-	this->commandMap["exit"] = &AbstractVM::push;
-
+	this->commandMap["pop"] = &AbstractVM::pop;
+	this->commandMap["dump"] = &AbstractVM::dump;
+	this->commandMap["assert"] = &AbstractVM::assert;
+	this->commandMap["add"] = &AbstractVM::add;
+	this->commandMap["sub"] = &AbstractVM::sub;
+	this->commandMap["mul"] = &AbstractVM::mul;
+	this->commandMap["div"] = &AbstractVM::div;
+	this->commandMap["mod"] = &AbstractVM::mod;
+	this->commandMap["print"] = &AbstractVM::print;
+	this->commandMap["exit"] = &AbstractVM::exit;
 }
 
+
+/* *************** CREATORS *************** */
 
 IOperand const *AbstractVM::createOperand(eOperandType type, std::string const &value) const {
 	return dynamic_cast<IOperand const *>((this->*(this->createPointerTab[type]))(value));
 }
-
-/* *************** COMMANDS *************** */
-
-// todo finish to work the comments
-
-void AbstractVM::push() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : push command" << std::endl;
-    }
-}
-
-void AbstractVM::pop() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : pop command" << std::endl;
-    }
-}
-
-void AbstractVM::dump() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : dump command" << std::endl;
-    }
-}
-
-void AbstractVM::assert() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : assert command" << std::endl;
-    }
-}
-
-void AbstractVM::add() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : add command" << std::endl;
-    }
-}
-
-void AbstractVM::sub() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : sub command" << std::endl;
-    }
-}
-
-void AbstractVM::mul() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : mul command" << std::endl;
-    }
-}
-
-void AbstractVM::div() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : div command" << std::endl;
-    }
-}
-
-void AbstractVM::mod() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : mod command" << std::endl;
-    }
-}
-
-void AbstractVM::print() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : print command" << std::endl;
-    }
-}
-
-void AbstractVM::exit() {
-    if (AbstractVM::debugFlag) {
-        std::cout << "AbstractVM : eixt command" << std::endl;
-    }
-}
-
-/* *************** CREATORS *************** */
 
 IOperand const *AbstractVM::createInt8(std::string const &value) const {
     std::cout << "create Int 8 : [" + value + "]" << std::endl;
@@ -133,6 +71,75 @@ std::ostream &operator<<(std::ostream &o, IOperand const &rhs) {
     o << rhs.toString();
     return o;
 }
+
+/* *************** COMMANDS *************** */
+
+void AbstractVM::push() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : push command" << std::endl;
+	}
+}
+
+void AbstractVM::pop() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : pop command" << std::endl;
+	}
+}
+
+void AbstractVM::dump() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : dump command" << std::endl;
+	}
+}
+
+void AbstractVM::assert() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : assert command" << std::endl;
+	}
+}
+
+void AbstractVM::add() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : add command" << std::endl;
+	}
+}
+
+void AbstractVM::sub() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : sub command" << std::endl;
+	}
+}
+
+void AbstractVM::mul() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : mul command" << std::endl;
+	}
+}
+
+void AbstractVM::div() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : div command" << std::endl;
+	}
+}
+
+void AbstractVM::mod() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : mod command" << std::endl;
+	}
+}
+
+void AbstractVM::print() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : print command" << std::endl;
+	}
+}
+
+void AbstractVM::exit() {
+	if (AbstractVM::debugFlag) {
+		std::cout << "AbstractVM : exit command" << std::endl;
+	}
+}
+
 
 /* *************** COPY *************** */
 
