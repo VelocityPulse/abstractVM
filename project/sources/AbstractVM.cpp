@@ -10,12 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
 #include "../includes/AbstractVM.hpp"
-#include "../includes/AbstractVMException.hpp"
 
 bool AbstractVM::_debugFlag = true;
-AbstractVM* AbstractVM::_singleton = nullptr;
+AbstractVM *AbstractVM::_singleton = nullptr;
 
 AbstractVM::AbstractVM() {
 	this->_createPointerTab.push_back(&AbstractVM::createInt8);
@@ -39,12 +37,23 @@ AbstractVM::AbstractVM() {
 /* *************** PARSING *************** */
 
 void AbstractVM::parseCommand(std::string prompt) {
-	std::map<std::string, TypeCommandFunction>::iterator it = this->_commandMap.find(prompt);
-
-	if (it != this->_commandMap.end()) {
-		(this->*(it)->second)();
+	std::vector<std::string> split = stringSplit(prompt, ' ');
+//	if (split.size() == 2 && !isDouble(split[1])) {
+//		throw AbstractVMException("Invalid command argument");
+//	} else {
+//		std::cout << "number : " + split[1] << std::endl;
+//	}
+	if (split.size() == 1) {
+		std::map<std::string, TypeCommandFunction>::iterator it = this->_commandMap.find(prompt);
+		if (it != this->_commandMap.end()) {
+			(this->*(it)->second)();
+		} else {
+			throw AbstractVMException("Command not found");
+		}
+	} else if (split.size() == 2) {
+		push();
 	} else {
-		throw AbstractVMException("test first exception");
+		throw AbstractVMException("Invalid command");
 	}
 }
 
@@ -88,6 +97,8 @@ std::ostream &operator<<(std::ostream &o, IOperand const &rhs) {
 /* *************** COMMANDS *************** */
 
 void AbstractVM::push() {
+	throw AbstractVMException("test to remove");
+
 	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : push command" << std::endl;
 	}
@@ -160,7 +171,7 @@ AbstractVM::AbstractVM(AbstractVM const &copy) {
 }
 
 AbstractVM &AbstractVM::operator=(AbstractVM const &copy) {
-	(void)copy;
+	(void) copy;
 	return *this;
 }
 
@@ -170,7 +181,7 @@ AbstractVM *AbstractVM::getInstance() {
 	return AbstractVM::_singleton;
 }
 
-std::string AbstractVM::stringTrim(std::string &str) {
+std::string AbstractVM::stringTrim(const std::string &str) {
 	if (str.empty()) return str;
 	std::string::size_type i;
 	std::string::size_type j;
@@ -183,4 +194,25 @@ std::string AbstractVM::stringTrim(std::string &str) {
 	while (isspace(str[j]))
 		--j;
 	return str.substr(i, j - i + 1);
+}
+
+std::vector<std::string> AbstractVM::stringSplit(const std::string &string, char c) {
+	std::vector<std::string> split;
+	char * pch;
+	pch = strtok (const_cast<char *>(string.c_str()), &c);
+	while (pch != NULL) {
+		split.push_back(pch);
+		pch = strtok (NULL, &c);
+	}
+	return split;
+}
+
+bool AbstractVM::isDouble(const std::string &string) {
+	try {
+		std::stod(string);
+	}
+	catch (std::exception) {
+		return false;
+	}
+	return true;
 }

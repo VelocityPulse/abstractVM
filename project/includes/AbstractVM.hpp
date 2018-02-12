@@ -14,19 +14,23 @@
 #define ABSTRACTVM_ABSTRACTVM_HPP
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <map>
 #include <stack>
 #include "IOperand.hpp"
 #include "Operand.tpp"
+#include "AbstractVMException.hpp"
 
 class AbstractVM {
 
 public:
 	static AbstractVM *getInstance();
 
-	static std::string stringTrim(std::string &string);
+	static std::string stringTrim(const std::string &string);
+	static std::vector<std::string> stringSplit(const std::string &string, char c);
+	static bool isDouble(const std::string &string);
 
 	IOperand const * createOperand( eOperandType type, std::string const & value ) const;
 	IOperand const * createInt8( std::string const & value ) const;
