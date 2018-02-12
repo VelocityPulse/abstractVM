@@ -24,9 +24,9 @@
 class AbstractVM {
 
 public:
-	AbstractVM(); // Canonical
-	AbstractVM(AbstractVM const &copy); // Canonical
-	~AbstractVM() {} // Canonical
+	static AbstractVM *getInstance();
+
+	static std::string stringTrim(std::string &string);
 
 	IOperand const * createOperand( eOperandType type, std::string const & value ) const;
 	IOperand const * createInt8( std::string const & value ) const;
@@ -36,14 +36,17 @@ public:
 	IOperand const * createDouble( std::string const & value ) const;
 
     void parseCommand(std::string prompt);
-
     void executeCommand(std::string cmd);
     void executeCommand(std::string cmd, std::string value);
 
-	AbstractVM &operator=(AbstractVM const &copy); // Canonical
 
 private:
-    void push();
+	AbstractVM &operator=(AbstractVM const &copy); // Canonical
+	AbstractVM(); // Canonical
+	AbstractVM(AbstractVM const &copy); // Canonical
+	~AbstractVM() {} // Canonical
+
+	void push();
     void pop();
     void dump();
     void assert();
@@ -55,10 +58,13 @@ private:
     void print();
     void exit();
 
-	typedef const IOperand *(AbstractVM::*OperandFunc)(const std::string &) const;
+	typedef const IOperand *(AbstractVM::*TypeOperandFunction)(const std::string &) const;
+	typedef void (AbstractVM::*TypeCommandFunction)();
+
+	static AbstractVM *singleton;
     static bool debugFlag;
-	std::vector<OperandFunc> createPointerTab;
-	std::map<std::string, void (AbstractVM::*)()> commandMap;
+	std::vector<TypeOperandFunction> createPointerTab;
+	std::map<std::string, TypeCommandFunction> commandMap;
 	std::stack<IOperand> stack;
 
 };

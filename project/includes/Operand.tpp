@@ -32,7 +32,8 @@ public:
 
 	Operand &operator=(Operand const &copy) { // Canonical
 		if (this != &copy) {
-			// copy
+			this->_type = copy._type;
+			this->_value = copy._value;
 			//TODO 06 Feb 2018 01:31 make this
 		}
 		return *this;
