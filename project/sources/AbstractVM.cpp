@@ -50,7 +50,8 @@ void AbstractVM::parseCommand(std::string prompt) {
 	}
 
 	// test existing command
-	std::map<std::string, TypeCommandFunction>::iterator it = this->_commandMap.find(split[0]);
+	MapCommandIterator it = this->_commandMap.find(split[0]);
+	MapCommandIterator end = this->_commandMap.end();
 	if (it == this->_commandMap.end()) {
 		throw AbstractVMException("Command not found");
 	}
