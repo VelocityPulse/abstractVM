@@ -12,53 +12,46 @@
 
 #include <iostream>
 #include "../includes/AbstractVM.hpp"
+#include "../includes/AbstractVMException.hpp"
 
-bool AbstractVM::debugFlag = true;
-AbstractVM *AbstractVM = nullptr;
+bool AbstractVM::_debugFlag = true;
+AbstractVM* AbstractVM::_singleton = nullptr;
 
 AbstractVM::AbstractVM() {
-	this->createPointerTab.push_back(&AbstractVM::createInt8);
-	this->createPointerTab.push_back(&AbstractVM::createInt16);
-	this->createPointerTab.push_back(&AbstractVM::createInt32);
-	this->createPointerTab.push_back(&AbstractVM::createFloat);
-	this->createPointerTab.push_back(&AbstractVM::createDouble);
-	this->commandMap["push"] = &AbstractVM::push;
-	this->commandMap["pop"] = &AbstractVM::pop;
-	this->commandMap["dump"] = &AbstractVM::dump;
-	this->commandMap["assert"] = &AbstractVM::assert;
-	this->commandMap["add"] = &AbstractVM::add;
-	this->commandMap["sub"] = &AbstractVM::sub;
-	this->commandMap["mul"] = &AbstractVM::mul;
-	this->commandMap["div"] = &AbstractVM::div;
-	this->commandMap["mod"] = &AbstractVM::mod;
-	this->commandMap["print"] = &AbstractVM::print;
-	this->commandMap["exit"] = &AbstractVM::exit;
+	this->_createPointerTab.push_back(&AbstractVM::createInt8);
+	this->_createPointerTab.push_back(&AbstractVM::createInt16);
+	this->_createPointerTab.push_back(&AbstractVM::createInt32);
+	this->_createPointerTab.push_back(&AbstractVM::createFloat);
+	this->_createPointerTab.push_back(&AbstractVM::createDouble);
+	this->_commandMap["push"] = &AbstractVM::push;
+	this->_commandMap["pop"] = &AbstractVM::pop;
+	this->_commandMap["dump"] = &AbstractVM::dump;
+	this->_commandMap["assert"] = &AbstractVM::assert;
+	this->_commandMap["add"] = &AbstractVM::add;
+	this->_commandMap["sub"] = &AbstractVM::sub;
+	this->_commandMap["mul"] = &AbstractVM::mul;
+	this->_commandMap["div"] = &AbstractVM::div;
+	this->_commandMap["mod"] = &AbstractVM::mod;
+	this->_commandMap["print"] = &AbstractVM::print;
+	this->_commandMap["exit"] = &AbstractVM::exit;
 }
 
 /* *************** PARSING *************** */
 
 void AbstractVM::parseCommand(std::string prompt) {
-	std::map<std::string, TypeCommandFunction>::iterator it = this->commandMap.find(prompt);
+	std::map<std::string, TypeCommandFunction>::iterator it = this->_commandMap.find(prompt);
 
-	(this->*(this->commandMap[prompt]))();
-
-//	if (this->commandMap.count(prompt)) {
-//		std::cout << "found" << std::endl;
-//	} else {
-//		std::cout << "error : [" + prompt + "]" << std::endl;
-//	}
-//
-//	if (it != this->commandMap.end()) {
-//		(this->*(it)->second)();
-//	} else {
-//		std::cout << "error : [" + prompt + "]" << std::endl;
-//	}
+	if (it != this->_commandMap.end()) {
+		(this->*(it)->second)();
+	} else {
+		throw AbstractVMException("test first exception");
+	}
 }
 
 /* *************** CREATORS *************** */
 
 IOperand const *AbstractVM::createOperand(eOperandType type, std::string const &value) const {
-	return dynamic_cast<IOperand const *>((this->*(this->createPointerTab[type]))(value));
+	return dynamic_cast<IOperand const *>((this->*(this->_createPointerTab[type]))(value));
 }
 
 IOperand const *AbstractVM::createInt8(std::string const &value) const {
@@ -95,67 +88,67 @@ std::ostream &operator<<(std::ostream &o, IOperand const &rhs) {
 /* *************** COMMANDS *************** */
 
 void AbstractVM::push() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : push command" << std::endl;
 	}
 }
 
 void AbstractVM::pop() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : pop command" << std::endl;
 	}
 }
 
 void AbstractVM::dump() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : dump command" << std::endl;
 	}
 }
 
 void AbstractVM::assert() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : assert command" << std::endl;
 	}
 }
 
 void AbstractVM::add() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : add command" << std::endl;
 	}
 }
 
 void AbstractVM::sub() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : sub command" << std::endl;
 	}
 }
 
 void AbstractVM::mul() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : mul command" << std::endl;
 	}
 }
 
 void AbstractVM::div() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : div command" << std::endl;
 	}
 }
 
 void AbstractVM::mod() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : mod command" << std::endl;
 	}
 }
 
 void AbstractVM::print() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : print command" << std::endl;
 	}
 }
 
 void AbstractVM::exit() {
-	if (AbstractVM::debugFlag) {
+	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : exit command" << std::endl;
 	}
 }
@@ -167,13 +160,14 @@ AbstractVM::AbstractVM(AbstractVM const &copy) {
 }
 
 AbstractVM &AbstractVM::operator=(AbstractVM const &copy) {
+	(void)copy;
 	return *this;
 }
 
 AbstractVM *AbstractVM::getInstance() {
-	if (!AbstractVM::singleton)
-		AbstractVM::singleton = new AbstractVM();
-	return AbstractVM::singleton;
+	if (!AbstractVM::_singleton)
+		AbstractVM::_singleton = new AbstractVM();
+	return AbstractVM::_singleton;
 }
 
 std::string AbstractVM::stringTrim(std::string &str) {

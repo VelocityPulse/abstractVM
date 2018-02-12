@@ -61,11 +61,11 @@ private:
 	typedef const IOperand *(AbstractVM::*TypeOperandFunction)(const std::string &) const;
 	typedef void (AbstractVM::*TypeCommandFunction)();
 
-	static AbstractVM *singleton;
-    static bool debugFlag;
-	std::vector<TypeOperandFunction> createPointerTab;
-	std::map<std::string, TypeCommandFunction> commandMap;
-	std::stack<IOperand> stack;
+	static AbstractVM *_singleton;
+    static bool _debugFlag;
+	std::vector<TypeOperandFunction> _createPointerTab;
+	std::map<std::string, TypeCommandFunction> _commandMap;
+	std::stack<IOperand> _stack;
 
 };
 

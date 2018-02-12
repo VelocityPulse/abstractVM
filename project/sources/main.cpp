@@ -11,12 +11,17 @@
 /* ************************************************************************** */
 
 #include "../includes/AbstractVM.hpp"
+#include "../includes/AbstractVMException.hpp"
 
 void manageStandardEntry(AbstractVM *vm) { //TODO 12 Feb 2018 11:37 make the parameter a reference
 	std::string line;
 
 	while (std::getline(std::cin, line)) {
-		vm->parseCommand(AbstractVM::stringTrim(line));
+		try {
+			vm->parseCommand(AbstractVM::stringTrim(line));
+		} catch (AbstractVMException &e) {
+			std::cout << e.what() << std::endl;
+		}
 	}
 }
 
