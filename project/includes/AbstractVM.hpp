@@ -23,6 +23,8 @@
 #include "Operand.tpp"
 #include "AbstractVMException.hpp"
 
+extern bool globalDebugFlag;
+
 class AbstractVM {
 
 public:
@@ -44,9 +46,9 @@ public:
     void parseCommand(std::string prompt);
     void executeCommand(std::string cmd);
     void executeCommand(std::string cmd, std::string parameter);
-	int getIntegerParameter(std::string string);
-	float getFloatParameter(std::string string);
-	double getDoubleParameter(std::string string);
+	std::string getIntegerParameter(std::string string);
+	std::string getFloatParameter(std::string string);
+	std::string getDoubleParameter(std::string string);
 
 private:
 	AbstractVM &operator=(AbstractVM const &copy); // Canonical
@@ -73,7 +75,6 @@ private:
 	typedef MapCommand::iterator MapCommandIterator;
 
 	static AbstractVM *_singleton;
-    static bool _debugFlag;
 	VectorOperand _createPointerTab;
 	MapCommand _commandMap;
 	std::stack<IOperand> _stack;

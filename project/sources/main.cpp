@@ -13,6 +13,8 @@
 #include "../includes/AbstractVM.hpp"
 #include "../includes/AbstractVMException.hpp"
 
+bool globalDebugFlag = true;
+
 void manageStandardEntry(AbstractVM *vm) { //TODO 12 Feb 2018 11:37 make the parameter a reference
 	std::string line;
 

@@ -12,7 +12,6 @@
 
 #include "../includes/AbstractVM.hpp"
 
-bool AbstractVM::_debugFlag = true;
 AbstractVM *AbstractVM::_singleton = nullptr;
 
 AbstractVM::AbstractVM() {
@@ -37,7 +36,7 @@ AbstractVM::AbstractVM() {
 /* *************** PARSING *************** */
 
 void AbstractVM::parseCommand(std::string prompt) {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM::parseCommand(std::string prompt)" << std::endl;
 	}
 
@@ -63,41 +62,43 @@ void AbstractVM::parseCommand(std::string prompt) {
 	} else {
 		throw AbstractVMException("Invalid command");
 	}
-
-	//TODO 12 Feb 2018 04:29 make a system for parse "int8(n)" "int16(n)" "double(z)" etc...
-
 }
 
 void AbstractVM::executeCommand(std::string cmd) {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM::executeCommand(std::string)" << std::endl;
 	}
 }
 
 void AbstractVM::executeCommand(std::string cmd, std::string parameter) {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM::executeCommand(std::string cmd, std::string value)" << std::endl;
 	}
 
-	// test valid parameter
-	const char *c_str = parameter.c_str();
-	if (!std::strncmp(c_str, "int8(", 5)) {
-		std::cout << getIntegerParameter(&parameter[5]) << std::endl;
-	} else if (!std::strncmp(c_str, "int16(", 6)) {
-		std::cout << getIntegerParameter(&parameter[6]) << std::endl;
-	} else if (!std::strncmp(c_str, "int32(", 6)) {
-		std::cout << getIntegerParameter(&parameter[6]) << std::endl;
-	} else if (!std::strncmp(c_str, "float(", 6)) {
-		std::cout << getFloatParameter(&parameter[6]) << std::endl;
-	} else if (!std::strncmp(c_str, "double(", 7)) {
-		std::cout << getDoubleParameter(&parameter[7]) << std::endl;
+	// test valid command
+	if (cmd == "push" || cmd == "assert") {
+		// test valid parameter
+		const char *c_str = parameter.c_str();
+		if (!std::strncmp(c_str, "int8(", 5)) {
+			createOperand(Int8, getIntegerParameter(&parameter[5]));
+		} else if (!std::strncmp(c_str, "int16(", 6)) {
+			createOperand(Int16, getIntegerParameter(&parameter[6]));
+		} else if (!std::strncmp(c_str, "int32(", 6)) {
+			createOperand(Int32, getIntegerParameter(&parameter[6]));
+		} else if (!std::strncmp(c_str, "float(", 6)) {
+			createOperand(Float, getFloatParameter(&parameter[6]));
+		} else if (!std::strncmp(c_str, "double(", 7)) {
+			createOperand(Double, getDoubleParameter(&parameter[7]));
+		} else {
+			throw AbstractVMException(__FUNCTION__, "Invalid parameter");
+		}
 	} else {
-		throw AbstractVMException(__FUNCTION__,  "Invalid parameter");
+		throw AbstractVMException("Invalid command for parameter");
 	}
 }
 
-int AbstractVM::getIntegerParameter(std::string string) {
-	if (AbstractVM::_debugFlag) {
+std::string AbstractVM::getIntegerParameter(std::string string) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM::getIntegerParameter(std::string const string)" << std::endl;
 	}
 	char *p;
@@ -106,7 +107,7 @@ int AbstractVM::getIntegerParameter(std::string string) {
 		// pop back for remove last char ')'
 		string.pop_back();
 		if (isInteger(string)) {
-			return std::stoi(string);
+			return string;
 		} else {
 			throw AbstractVMException("Bad length");
 		}
@@ -115,8 +116,8 @@ int AbstractVM::getIntegerParameter(std::string string) {
 	}
 }
 
-float AbstractVM::getFloatParameter(std::string string) {
-	if (AbstractVM::_debugFlag) {
+std::string AbstractVM::getFloatParameter(std::string string) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM::getFloatParameter(std::string const string)" << std::endl;
 	}
 	char *p;
@@ -128,7 +129,7 @@ float AbstractVM::getFloatParameter(std::string string) {
 		// pop back for remove last char ')'
 		string.pop_back();
 		if (isFloat(string)) {
-			return std::stof(string);
+			return string;
 		} else {
 			throw AbstractVMException("Bad length");
 		}
@@ -137,8 +138,8 @@ float AbstractVM::getFloatParameter(std::string string) {
 	}
 }
 
-double AbstractVM::getDoubleParameter(std::string string) {
-	if (AbstractVM::_debugFlag) {
+std::string AbstractVM::getDoubleParameter(std::string string) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM::getDoubleParameter(std::string string)" << std::endl;
 	}
 	char *p;
@@ -147,54 +148,67 @@ double AbstractVM::getDoubleParameter(std::string string) {
 		// pop back for remove last char ')'
 		string.pop_back();
 		if (isDouble(string)) {
-			return std::stod(string);
+			return string;
 		} else {
 			throw AbstractVMException("Bad length");
 		}
 	} else {
 		throw AbstractVMException(__FUNCTION__, "Invalid parameter");
 	}
-
 }
-
 
 /* *************** CREATORS *************** */
 
 IOperand const *AbstractVM::createOperand(eOperandType type, std::string const &value) const {
+	if (globalDebugFlag) {
+		std::cout << "AbstractVM::createOperand(eOperandType type, std::string const &value)" << std::endl;
+	}
 	return dynamic_cast<IOperand const *>((this->*(this->_createPointerTab[type]))(value));
 }
 
 IOperand const *AbstractVM::createInt8(std::string const &value) const {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "create Int 8 : [" + value + "]" << std::endl;
 	}
-	//TODO 06 Feb 2018 02:52 check if throw is required when > than max int8 or < than min int8
-	return new Operand<char>(Int8, static_cast<char>(stoi(value)));
+	double v = stoi(value);
+	if (v > INT8_MAX || v < INT8_MIN) {
+		// throw
+	}
+	return new Operand<char>(Int8, static_cast<char>(v));
 }
 
 IOperand const *AbstractVM::createInt16(std::string const &value) const {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "create Int 16 : [" + value + "]" << std::endl;
+	}
+	double v = stoi(value);
+	if (v > INT16_MAX || v < INT16_MIN) {
+		// throw
 	}
 	return new Operand<short>(Int16, static_cast<short>(stoi(value)));
 }
 
 IOperand const *AbstractVM::createInt32(std::string const &value) const {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "create Int 32 : [" + value + "]" << std::endl;
+	}
+	double v = stoi(value);
+	if (v > INT32_MAX || v < INT32_MIN) {
+		// throw
 	}
 	return new Operand<int>(Int32, stoi(value));
 }
 
 IOperand const *AbstractVM::createFloat(std::string const &value) const {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "create Float : [" + value + "]" << std::endl;
 	}
+	//TODO 14 Feb 2018 04:04 code overflow security for all creators
 	return new Operand<float>(Float, std::stof(value));
 }
 
 IOperand const *AbstractVM::createDouble(std::string const &value) const {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "create Double : [" + value + "]" << std::endl;
 	}
 	return new Operand<double>(Double, std::stod(value));
@@ -208,69 +222,67 @@ std::ostream &operator<<(std::ostream &o, IOperand const &rhs) {
 /* *************** COMMANDS *************** */
 
 void AbstractVM::push() {
-//	throw AbstractVMException("push throw test");
-
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : push command" << std::endl;
 	}
 }
 
 void AbstractVM::pop() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : pop command" << std::endl;
 	}
 }
 
 void AbstractVM::dump() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : dump command" << std::endl;
 	}
 }
 
 void AbstractVM::assert() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : assert command" << std::endl;
 	}
 }
 
 void AbstractVM::add() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : add command" << std::endl;
 	}
 }
 
 void AbstractVM::sub() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : sub command" << std::endl;
 	}
 }
 
 void AbstractVM::mul() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : mul command" << std::endl;
 	}
 }
 
 void AbstractVM::div() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : div command" << std::endl;
 	}
 }
 
 void AbstractVM::mod() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : mod command" << std::endl;
 	}
 }
 
 void AbstractVM::print() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : print command" << std::endl;
 	}
 }
 
 void AbstractVM::exit() {
-	if (AbstractVM::_debugFlag) {
+	if (globalDebugFlag) {
 		std::cout << "AbstractVM : exit command" << std::endl;
 	}
 }

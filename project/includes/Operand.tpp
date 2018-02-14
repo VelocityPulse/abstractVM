@@ -15,6 +15,8 @@
 
 #include "IOperand.hpp"
 
+extern bool globalDebugFlag;
+
 template<typename T>
 class Operand : public IOperand {
 
@@ -24,7 +26,11 @@ private:
 	T _value;
 
 public:
-	Operand<T>(eOperandType type, T value) : _type(type), _value(value) {}
+	Operand<T>(eOperandType type, T value) : _type(type), _value(value) {
+		if (globalDebugFlag) {
+			std::cout << "constructor operand. type(" << this->_type << ") value(" << this->_value << ")";
+		}
+	}
 
 	Operand(Operand const &copy) {}  // Canonical
 
