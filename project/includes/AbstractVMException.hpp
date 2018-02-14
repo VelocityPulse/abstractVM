@@ -19,7 +19,8 @@ class AbstractVMException : public std::exception {
 
 public:
 	AbstractVMException(); // Canonical
-	AbstractVMException(std::string msg);
+	AbstractVMException(std::string const msg);
+	AbstractVMException(std::string const tag, std::string const msg);
 	AbstractVMException(AbstractVMException const &copy); // Canonical
 	~AbstractVMException(); // Canonical
 
@@ -28,6 +29,7 @@ public:
 	AbstractVMException &operator=(AbstractVMException const &copy); // Canonical
 
 private:
+	std::string _tag;
 	std::string _msg;
 
 };

@@ -16,7 +16,11 @@ AbstractVMException::AbstractVMException() {
 
 }
 
-AbstractVMException::AbstractVMException(std::string msg) : _msg(msg) {
+AbstractVMException::AbstractVMException(std::string const msg) : _msg(msg) {
+	_tag = "";
+}
+
+AbstractVMException::AbstractVMException(std::string const tag, std::string const msg) : _tag(tag), _msg(msg) {
 
 }
 
@@ -38,5 +42,9 @@ AbstractVMException &AbstractVMException::operator=(AbstractVMException const &c
 
 const char *AbstractVMException::what() const throw() {
 //	return exception::what();
-	return std::string("AbstractVM Exception : " + this->_msg).c_str();
+	if (_tag != "") {
+		return std::string("AbstractVM Exception : " + this->_tag + " " + this->_msg).c_str();
+	} else {
+		return std::string("AbstractVM Exception : " + this->_msg).c_str();
+	}
 }

@@ -18,7 +18,12 @@ void manageStandardEntry(AbstractVM *vm) { //TODO 12 Feb 2018 11:37 make the par
 
 	while (std::getline(std::cin, line)) {
 		try {
-			vm->parseCommand(AbstractVM::stringTrim(line));
+			line = AbstractVM::stringTrim(line);
+			if (line[0] == ';' && line[1] == ';') {
+				return;
+			} else if (line[0] != ';') {
+				vm->parseCommand(line);
+			}
 		} catch (AbstractVMException &e) {
 			std::cout << e.what() << std::endl;
 		}
@@ -41,6 +46,6 @@ int main(int argc, char **argv) {
 //	} else {
 //		std::cout << "bad entry" << std::endl;
 //	}
-    std::cout << "SUCCESS end of program" << std::endl;
+	std::cout << "SUCCESS end of program" << std::endl;
 //	return 1;
 }

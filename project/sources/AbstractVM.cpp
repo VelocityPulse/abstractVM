@@ -74,11 +74,89 @@ void AbstractVM::executeCommand(std::string cmd) {
 	}
 }
 
-void AbstractVM::executeCommand(std::string cmd, std::string value) {
+void AbstractVM::executeCommand(std::string cmd, std::string parameter) {
 	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM::executeCommand(std::string cmd, std::string value)" << std::endl;
 	}
+
+	// test valid parameter
+	const char *c_str = parameter.c_str();
+	if (!std::strncmp(c_str, "int8(", 5)) {
+		std::cout << getIntegerParameter(&parameter[5]) << std::endl;
+	} else if (!std::strncmp(c_str, "int16(", 6)) {
+		std::cout << getIntegerParameter(&parameter[6]) << std::endl;
+	} else if (!std::strncmp(c_str, "int32(", 6)) {
+		std::cout << getIntegerParameter(&parameter[6]) << std::endl;
+	} else if (!std::strncmp(c_str, "float(", 6)) {
+		std::cout << getFloatParameter(&parameter[6]) << std::endl;
+	} else if (!std::strncmp(c_str, "double(", 7)) {
+		std::cout << getDoubleParameter(&parameter[7]) << std::endl;
+	} else {
+		throw AbstractVMException(__FUNCTION__,  "Invalid parameter");
+	}
 }
+
+int AbstractVM::getIntegerParameter(std::string string) {
+	if (AbstractVM::_debugFlag) {
+		std::cout << "AbstractVM::getIntegerParameter(std::string const string)" << std::endl;
+	}
+	char *p;
+	strtol(string.c_str(), &p, 10);
+	if (*p == ')' && std::count(string.begin(), string.end(), ')') == 1) {
+		// pop back for remove last char ')'
+		string.pop_back();
+		if (isInteger(string)) {
+			return std::stoi(string);
+		} else {
+			throw AbstractVMException("Bad length");
+		}
+	} else {
+		throw AbstractVMException(__FUNCTION__, "Invalid parameter");
+	}
+}
+
+float AbstractVM::getFloatParameter(std::string string) {
+	if (AbstractVM::_debugFlag) {
+		std::cout << "AbstractVM::getFloatParameter(std::string const string)" << std::endl;
+	}
+	char *p;
+	strtof(string.c_str(), &p);
+	if (std::count(string.begin(), string.end(), ')') != 1) {
+		throw AbstractVMException(__FUNCTION__, "Invalid parameter");
+	}
+	if (*p == ')' || (p[0] == 'f' && p[1] == ')')) {
+		// pop back for remove last char ')'
+		string.pop_back();
+		if (isFloat(string)) {
+			return std::stof(string);
+		} else {
+			throw AbstractVMException("Bad length");
+		}
+	} else {
+		throw AbstractVMException(__FUNCTION__, "Invalid parameter");
+	}
+}
+
+double AbstractVM::getDoubleParameter(std::string string) {
+	if (AbstractVM::_debugFlag) {
+		std::cout << "AbstractVM::getDoubleParameter(std::string string)" << std::endl;
+	}
+	char *p;
+	strtod(string.c_str(), &p);
+	if (*p == ')' && std::count(string.begin(), string.end(), ')') == 1) {
+		// pop back for remove last char ')'
+		string.pop_back();
+		if (isDouble(string)) {
+			return std::stod(string);
+		} else {
+			throw AbstractVMException("Bad length");
+		}
+	} else {
+		throw AbstractVMException(__FUNCTION__, "Invalid parameter");
+	}
+
+}
+
 
 /* *************** CREATORS *************** */
 
@@ -130,7 +208,7 @@ std::ostream &operator<<(std::ostream &o, IOperand const &rhs) {
 /* *************** COMMANDS *************** */
 
 void AbstractVM::push() {
-	throw AbstractVMException("push throw test");
+//	throw AbstractVMException("push throw test");
 
 	if (AbstractVM::_debugFlag) {
 		std::cout << "AbstractVM : push command" << std::endl;
@@ -249,3 +327,24 @@ bool AbstractVM::isDouble(const std::string &string) {
 	}
 	return true;
 }
+
+bool AbstractVM::isInteger(const std::string &string) {
+	try {
+		std::stoi(string);
+	}
+	catch (std::exception) {
+		return false;
+	}
+	return true;
+}
+
+bool AbstractVM::isFloat(const std::string &string) {
+	try {
+		std::stof(string);
+	}
+	catch (std::exception) {
+		return false;
+	}
+	return true;
+}
+

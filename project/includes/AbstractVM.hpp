@@ -31,6 +31,8 @@ public:
 	static std::string stringTrim(const std::string &string);
 	static std::vector<std::string> stringSplit(const std::string &string, char c);
 	static bool isDouble(const std::string &string);
+	static bool isInteger(const std::string &string);
+	static bool isFloat(std::string const &string);
 
 	IOperand const * createOperand( eOperandType type, std::string const & value ) const;
 	IOperand const * createInt8( std::string const & value ) const;
@@ -41,8 +43,10 @@ public:
 
     void parseCommand(std::string prompt);
     void executeCommand(std::string cmd);
-    void executeCommand(std::string cmd, std::string value);
-
+    void executeCommand(std::string cmd, std::string parameter);
+	int getIntegerParameter(std::string string);
+	float getFloatParameter(std::string string);
+	double getDoubleParameter(std::string string);
 
 private:
 	AbstractVM &operator=(AbstractVM const &copy); // Canonical
@@ -75,6 +79,5 @@ private:
 	std::stack<IOperand> _stack;
 
 };
-
 
 #endif //ABSTRACTVM_ABSTRACTVM_HPP
