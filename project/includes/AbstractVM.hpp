@@ -56,22 +56,20 @@ private:
 	AbstractVM(AbstractVM const &copy); // Canonical
 	~AbstractVM() {} // Canonical
 
-	void push();
-    void pop();
-    void dump();
-    void assert();
-    void add();
-    void sub();
-    void mul();
-    void div();
-    void mod();
-    void print();
-    void exit();
+	void push(IOperand *iOperand);
+    void pop(IOperand *iOperand);
+    void dump(IOperand *iOperand);
+    void assert(IOperand *iOperand);
+    void add(IOperand *iOperand);
+    void sub(IOperand *iOperand);
+    void mul(IOperand *iOperand);
+    void div(IOperand *iOperand);
+    void mod(IOperand *iOperand);
+    void print(IOperand *iOperand);
+    void exit(IOperand *iOperand);
 
-	typedef const IOperand *(AbstractVM::*TypeOperandFunction)(const std::string &) const;
-	typedef void (AbstractVM::*TypeCommandFunction)();
-	typedef std::vector<TypeOperandFunction> VectorOperand;
-	typedef std::map<std::string, TypeCommandFunction> MapCommand;
+	typedef std::vector<const IOperand *(AbstractVM::*)(const std::string &) const> VectorOperand;
+	typedef std::map<std::string, void (AbstractVM::*)(IOperand *)> MapCommand;
 	typedef MapCommand::iterator MapCommandIterator;
 
 	static AbstractVM *_singleton;
