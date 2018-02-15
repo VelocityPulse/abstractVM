@@ -36,8 +36,6 @@ AbstractVM::AbstractVM() {
 /* *************** PARSING *************** */
 
 void AbstractVM::parseCommand(std::string prompt) {
-	throw AbstractVMException::Overflow();
-
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::parseCommand(std::string prompt)" << std::endl;
 	}
@@ -80,19 +78,25 @@ void AbstractVM::executeCommand(std::string cmd, std::string parameter) {
 	// test valid command
 	if (cmd == "push" || cmd == "assert") {
 		// test valid parameter
+		IOperand *iOperand;
 		const char *c_str = parameter.c_str();
 		if (!std::strncmp(c_str, "int8(", 5)) {
-			createOperand(Int8, getIntegerParameter(&parameter[5]));
+			iOperand = const_cast<IOperand *>(createOperand(Int8, getIntegerParameter(&parameter[5])));
 		} else if (!std::strncmp(c_str, "int16(", 6)) {
-			createOperand(Int16, getIntegerParameter(&parameter[6]));
+			iOperand = const_cast<IOperand *>(createOperand(Int16, getIntegerParameter(&parameter[6])));
 		} else if (!std::strncmp(c_str, "int32(", 6)) {
-			createOperand(Int32, getIntegerParameter(&parameter[6]));
+			iOperand = const_cast<IOperand *>(createOperand(Int32, getIntegerParameter(&parameter[6])));
 		} else if (!std::strncmp(c_str, "float(", 6)) {
-			createOperand(Float, getFloatParameter(&parameter[6]));
+			iOperand = const_cast<IOperand *>(createOperand(Float, getFloatParameter(&parameter[6])));
 		} else if (!std::strncmp(c_str, "double(", 7)) {
-			createOperand(Double, getDoubleParameter(&parameter[7]));
+			iOperand = const_cast<IOperand *>(createOperand(Double, getDoubleParameter(&parameter[7])));
 		} else {
 			throw AbstractVMException(__FUNCTION__, "Invalid parameter");
+		}
+		if (cmd == push) {
+			this->_stack.push_back(iOperand);
+		} else if () {
+
 		}
 	} else {
 		throw AbstractVMException("Invalid command for parameter");
@@ -229,6 +233,7 @@ void AbstractVM::push() {
 }
 
 void AbstractVM::pop() {
+	//TODO 15 Feb 2018 11:21 think to free
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM : pop command" << std::endl;
 	}

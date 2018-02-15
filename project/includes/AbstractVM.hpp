@@ -77,7 +77,7 @@ private:
 	static AbstractVM *_singleton;
 	VectorOperand _createPointerTab;
 	MapCommand _commandMap;
-	std::stack<IOperand> _stack;
+	std::vector<*IOperand> _stack;
 
 };
 

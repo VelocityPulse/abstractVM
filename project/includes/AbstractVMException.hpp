@@ -18,7 +18,6 @@
 class AbstractVMException : public std::exception {
 
 public:
-
 	class Overflow {
 	public:
 		Overflow(); // Canonical
@@ -49,7 +48,7 @@ public:
 
 	AbstractVMException &operator=(AbstractVMException const &copy); // Canonical
 
-protected:
+private:
 	std::string _tag;
 	std::string _msg;
 
