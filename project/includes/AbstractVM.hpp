@@ -18,7 +18,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <stack>
 #include "IOperand.hpp"
 #include "Operand.tpp"
 #include "AbstractVMException.hpp"
@@ -75,7 +74,7 @@ private:
 	static AbstractVM *_singleton;
 	VectorOperand _createPointerTab;
 	MapCommand _commandMap;
-	std::vector<*IOperand> _stack;
+	std::vector<IOperand*> _stack;
 
 };
 
