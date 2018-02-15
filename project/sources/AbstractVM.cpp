@@ -246,6 +246,15 @@ void AbstractVM::dump(IOperand *iOperand) {
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::dump(IOperand *iOperand)" << std::endl;
 	}
+	if (this->_stack.size() == 0) {
+		std::cout << "Stack is empty" << std::endl;
+		return ;
+	}
+	std::vector<IOperand *>::reverse_iterator it = this->_stack.rbegin();
+	while (it != this->_stack.rend()) {
+		std::cout << Operand<>::stringOfType((*it)->getType()) + "(" + (*it)->toString() + ")" << std::endl;
+		it++;
+	}
 }
 
 void AbstractVM::assert(IOperand *iOperand) {

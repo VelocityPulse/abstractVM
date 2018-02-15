@@ -17,7 +17,7 @@
 
 extern bool globalDebugFlag;
 
-template<typename T>
+template<typename T = int>
 class Operand : public IOperand {
 
 private:
@@ -75,6 +75,21 @@ public:
 
 	std::string const &toString(void) const override {
 		return *new std::string(std::to_string(this->_value));
+	}
+
+	static std::string stringOfType(eOperandType type) {
+		switch (type) {
+			case Int8 :
+				return "int8";
+			case Int16:
+				return "int16";
+			case Int32:
+				return "int32";
+			case Float:
+				return "float";
+			case Double:
+				return "double";
+		}
 	}
 };
 
