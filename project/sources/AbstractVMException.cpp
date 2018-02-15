@@ -48,3 +48,42 @@ const char *AbstractVMException::what() const throw() {
 		return std::string("AbstractVM Exception : " + this->_msg).c_str();
 	}
 }
+
+AbstractVMException::Overflow::Overflow() {
+}
+
+AbstractVMException::Overflow::~Overflow() {
+
+}
+
+AbstractVMException::Overflow::Overflow(AbstractVMException::Overflow const &copy) {
+
+}
+
+AbstractVMException::Overflow &AbstractVMException::Overflow::operator=(AbstractVMException::Overflow const &copy) {
+	return *this;
+}
+
+const char *AbstractVMException::Overflow::what() const throw() {
+	return std::string("AbstractVM Exception : Overflow").c_str();
+}
+
+AbstractVMException::Underflow::Underflow() {
+
+}
+
+AbstractVMException::Underflow::~Underflow() {
+
+}
+
+AbstractVMException::Underflow::Underflow(AbstractVMException::Underflow const &copy) {
+
+}
+
+AbstractVMException::Underflow &AbstractVMException::Underflow::operator=(AbstractVMException::Underflow const &copy) {
+	return *this;
+}
+
+const char *AbstractVMException::Underflow::what() const throw() {
+	return std::string("AbstractVM Exception : Underflow").c_str();
+}

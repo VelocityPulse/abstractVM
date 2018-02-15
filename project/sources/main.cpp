@@ -11,20 +11,20 @@
 /* ************************************************************************** */
 
 #include "../includes/AbstractVM.hpp"
-#include "../includes/AbstractVMException.hpp"
 
 bool globalDebugFlag = true;
 
-void manageStandardEntry(AbstractVM *vm) { //TODO 12 Feb 2018 11:37 make the parameter a reference
+void manageStandardEntry(AbstractVM &vm) { //TODO 12 Feb 2018 11:37 make the parameter a reference
 	std::string line;
 
 	while (std::getline(std::cin, line)) {
 		try {
 			line = AbstractVM::stringTrim(line);
-			if (line[0] == ';' && line[1] == ';') {
+			if (line[0] == ';' &&
+				line[1] == ';') { //TODO 15 Feb 2018 10:31 change this algorithm for comments, refer to subject
 				return;
 			} else if (line[0] != ';') {
-				vm->parseCommand(line);
+				vm.parseCommand(line);
 			}
 		} catch (AbstractVMException &e) {
 			std::cout << e.what() << std::endl;
@@ -35,7 +35,7 @@ void manageStandardEntry(AbstractVM *vm) { //TODO 12 Feb 2018 11:37 make the par
 int main(int argc, char **argv) {
 
 	AbstractVM *avm = AbstractVM::getInstance();
-	manageStandardEntry(avm);
+	manageStandardEntry(*avm);
 
 //	IOperand const *operand = avm.createOperand(Int16, "2440");
 //	std::cout << "[" + operand->toString() + "]" << std::endl;

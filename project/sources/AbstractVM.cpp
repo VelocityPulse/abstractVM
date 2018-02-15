@@ -36,6 +36,8 @@ AbstractVM::AbstractVM() {
 /* *************** PARSING *************** */
 
 void AbstractVM::parseCommand(std::string prompt) {
+	throw AbstractVMException::Overflow();
+
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::parseCommand(std::string prompt)" << std::endl;
 	}
@@ -167,49 +169,48 @@ IOperand const *AbstractVM::createOperand(eOperandType type, std::string const &
 }
 
 IOperand const *AbstractVM::createInt8(std::string const &value) const {
-	if (globalDebugFlag) {
-		std::cout << "create Int 8 : [" + value + "]" << std::endl;
-	}
 	double v = stoi(value);
+	if (globalDebugFlag) {
+		std::cout << "create Int 8 : \"" + value + "\"" << std::endl;
+	}
 	if (v > INT8_MAX || v < INT8_MIN) {
-		// throw
+		throw AbstractVMException(__FUNCTION__, "out_of_range");
 	}
 	return new Operand<char>(Int8, static_cast<char>(v));
 }
 
 IOperand const *AbstractVM::createInt16(std::string const &value) const {
-	if (globalDebugFlag) {
-		std::cout << "create Int 16 : [" + value + "]" << std::endl;
-	}
 	double v = stoi(value);
+	if (globalDebugFlag) {
+		std::cout << "create Int 16 : \"" + value + "\"" << std::endl;
+	}
 	if (v > INT16_MAX || v < INT16_MIN) {
-		// throw
+		throw AbstractVMException(__FUNCTION__, "out_of_range");
 	}
 	return new Operand<short>(Int16, static_cast<short>(stoi(value)));
 }
 
 IOperand const *AbstractVM::createInt32(std::string const &value) const {
-	if (globalDebugFlag) {
-		std::cout << "create Int 32 : [" + value + "]" << std::endl;
-	}
 	double v = stoi(value);
+	if (globalDebugFlag) {
+		std::cout << "create Int 32 : \"" + value + "\"" << std::endl;
+	}
 	if (v > INT32_MAX || v < INT32_MIN) {
-		// throw
+		throw AbstractVMException(__FUNCTION__, "out_of_range");
 	}
 	return new Operand<int>(Int32, stoi(value));
 }
 
 IOperand const *AbstractVM::createFloat(std::string const &value) const {
 	if (globalDebugFlag) {
-		std::cout << "create Float : [" + value + "]" << std::endl;
+		std::cout << "create Float : \"" + value + "\"" << std::endl;
 	}
-	//TODO 14 Feb 2018 04:04 code overflow security for all creators
 	return new Operand<float>(Float, std::stof(value));
 }
 
 IOperand const *AbstractVM::createDouble(std::string const &value) const {
 	if (globalDebugFlag) {
-		std::cout << "create Double : [" + value + "]" << std::endl;
+		std::cout << "create Double : \"" + value + "\"" << std::endl;
 	}
 	return new Operand<double>(Double, std::stod(value));
 }
