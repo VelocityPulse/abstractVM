@@ -33,7 +33,7 @@ AbstractVM::AbstractVM() {
 	this->_commandMap["exit"] = &AbstractVM::exit;
 }
 
-/* *************** PARSING *************** */
+/* ********************************* PARSING ********************************* */
 
 void AbstractVM::parseCommand(std::string prompt) {
 	if (globalDebugFlag) {
@@ -163,7 +163,7 @@ std::string AbstractVM::getDoubleParameter(std::string string) {
 	}
 }
 
-/* *************** CREATORS *************** */
+/* ********************************* CREATORS ********************************* */
 
 IOperand const *AbstractVM::createOperand(eOperandType type, std::string const &value) const {
 	if (globalDebugFlag) {
@@ -175,7 +175,7 @@ IOperand const *AbstractVM::createOperand(eOperandType type, std::string const &
 IOperand const *AbstractVM::createInt8(std::string const &value) const {
 	double v = stoi(value);
 	if (globalDebugFlag) {
-		std::cout << "create Int 8 : \"" + value + "\"" << std::endl;
+		std::cout << "AbstractVM::createInt8(std::string const &value)" << std::endl;
 	}
 	if (v > INT8_MAX || v < INT8_MIN) {
 		throw AbstractVMException(__FUNCTION__, "Out of range");
@@ -186,7 +186,7 @@ IOperand const *AbstractVM::createInt8(std::string const &value) const {
 IOperand const *AbstractVM::createInt16(std::string const &value) const {
 	double v = stoi(value);
 	if (globalDebugFlag) {
-		std::cout << "create Int 16 : \"" + value + "\"" << std::endl;
+		std::cout << "AbstractVM::createInt16(std::string const &value)" << std::endl;
 	}
 	if (v > INT16_MAX || v < INT16_MIN) {
 		throw AbstractVMException(__FUNCTION__, "Out of range");
@@ -197,7 +197,7 @@ IOperand const *AbstractVM::createInt16(std::string const &value) const {
 IOperand const *AbstractVM::createInt32(std::string const &value) const {
 	double v = stoi(value);
 	if (globalDebugFlag) {
-		std::cout << "create Int 32 : \"" + value + "\"" << std::endl;
+		std::cout << "AbstractVM::createInt32(std::string const &value)" << std::endl;
 	}
 	if (v > INT32_MAX || v < INT32_MIN) {
 		throw AbstractVMException(__FUNCTION__, "Out of range");
@@ -207,23 +207,23 @@ IOperand const *AbstractVM::createInt32(std::string const &value) const {
 
 IOperand const *AbstractVM::createFloat(std::string const &value) const {
 	if (globalDebugFlag) {
-		std::cout << "create Float : \"" + value + "\"" << std::endl;
+		std::cout << "AbstractVM::createFloat(std::string const &value)" << std::endl;
 	}
 	return new Operand<float>(Float, std::stof(value));
 }
 
 IOperand const *AbstractVM::createDouble(std::string const &value) const {
 	if (globalDebugFlag) {
-		std::cout << "create Double : \"" + value + "\"" << std::endl;
+		std::cout << "AbstractVM::createDouble(std::string const &value)" << std::endl;
 	}
 	return new Operand<double>(Double, std::stod(value));
 }
 
-/* *************** COMMANDS *************** */
+/* ********************************* COMMANDS ********************************* */
 
 void AbstractVM::push(IOperand *iOperand) {
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : push command" << std::endl;
+		std::cout << "AbstractVM::push(IOperand *iOperand)" << std::endl;
 	}
 	this->_stack.push_back(iOperand);
 }
@@ -231,13 +231,13 @@ void AbstractVM::push(IOperand *iOperand) {
 void AbstractVM::pop(IOperand *iOperand) {
 	//TODO 15 Feb 2018 11:21 think to free
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : pop command" << std::endl;
+		std::cout << "AbstractVM::pop(IOperand *iOperand)" << std::endl;
 	}
 }
 
 void AbstractVM::dump(IOperand *iOperand) {
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : dump command" << std::endl;
+		std::cout << "AbstractVM::dump(IOperand *iOperand)" << std::endl;
 	}
 }
 
@@ -248,52 +248,57 @@ void AbstractVM::assert(IOperand *iOperand) {
 	if (_stack.size() == 0) {
 		throw AbstractVMException(__FUNCTION__, "Stack is empty");
 	}
-//	if ()
+	IOperand *lastOne = this->_stack.back();
+	if (iOperand->getType() != lastOne->getType() || iOperand->toString() != lastOne->toString()) {
+		throw AbstractVMException(__FUNCTION__, "Value not match with the last on the stack");
+	} else if (globalDebugFlag) {
+		std::cout << "Assert success" << std::endl;
+	}
 }
 
 void AbstractVM::add(IOperand *iOperand) {
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : add command" << std::endl;
+		std::cout << "AbstractVM::add(IOperand *iOperand)" << std::endl;
 	}
 }
 
 void AbstractVM::sub(IOperand *iOperand) {
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : sub command" << std::endl;
+		std::cout << "AbstractVM::sub(IOperand *iOperand)" << std::endl;
 	}
 }
 
 void AbstractVM::mul(IOperand *iOperand) {
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : mul command" << std::endl;
+		std::cout << "AbstractVM::mul(IOperand *iOperand)" << std::endl;
 	}
 }
 
 void AbstractVM::div(IOperand *iOperand) {
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : div command" << std::endl;
+		std::cout << "AbstractVM::div(IOperand *iOperand)" << std::endl;
 	}
 }
 
 void AbstractVM::mod(IOperand *iOperand) {
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : mod command" << std::endl;
+		std::cout << "AbstractVM::mod(IOperand *iOperand)" << std::endl;
 	}
 }
 
 void AbstractVM::print(IOperand *iOperand) {
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : print command" << std::endl;
+		std::cout << "AbstractVM::print(IOperand *iOperand)" << std::endl;
 	}
 }
 
 void AbstractVM::exit(IOperand *iOperand) {
 	if (globalDebugFlag) {
-		std::cout << "AbstractVM : exit command" << std::endl;
+		std::cout << "AbstractVM::exit(IOperand *iOperand)" << std::endl;
 	}
 }
 
-/* *************** COMMONS *************** */
+/* ********************************* COMMONS ********************************* */
 
 AbstractVM::AbstractVM(AbstractVM const &copy) {
 	*this = copy;

@@ -28,7 +28,7 @@ private:
 public:
 	Operand<T>(eOperandType type, T value) : _type(type), _value(value) {
 		if (globalDebugFlag) {
-			std::cout << "constructor operand. type(" << this->_type << ") value(" << this->_value << ")" << std::endl;
+			std::cout << "Operand::Operand<T>(eOperandType " << this->_type << ", T " << toString() << ")" << std::endl;
 		}
 	}
 
