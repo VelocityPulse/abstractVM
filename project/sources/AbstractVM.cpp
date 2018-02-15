@@ -41,7 +41,7 @@ void AbstractVM::parseCommand(std::string prompt) {
 	}
 
 	// split
-	std::vector<std::string> split = stringSplit(prompt, ' ');
+	std::vector<std::string> split = stringSplit(prompt, " ");
 
 	// size security
 	if (split.size() < 1) {
@@ -68,6 +68,7 @@ void AbstractVM::executeCommand(std::string cmd) {
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::executeCommand(std::string)" << std::endl;
 	}
+	(this->*(this->_commandMap[cmd]))(nullptr);
 }
 
 void AbstractVM::executeCommand(std::string cmd, std::string parameter) {
@@ -233,6 +234,12 @@ void AbstractVM::pop(IOperand *iOperand) {
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::pop(IOperand *iOperand)" << std::endl;
 	}
+	if (this->_stack.size() == 0) {
+		throw AbstractVMException(__FUNCTION__, "Stack is empty");
+	} else {
+		delete this->_stack.back();
+		this->_stack.pop_back();
+	}
 }
 
 void AbstractVM::dump(IOperand *iOperand) {
@@ -330,13 +337,14 @@ std::string AbstractVM::stringTrim(const std::string &str) {
 	return str.substr(i, j - i + 1);
 }
 
-std::vector<std::string> AbstractVM::stringSplit(const std::string &string, char c) {
-	std::vector<std::string> split;
+std::vector<std::string> AbstractVM::stringSplit(const std::string &string, const char *c) {
 	char *pch;
-	pch = strtok(const_cast<char *>(string.c_str()), &c);
+	std::vector<std::string> split;
+
+	pch = strtok(const_cast<char *>(string.c_str()), c);
 	while (pch != NULL) {
 		split.push_back(pch);
-		pch = strtok(NULL, &c);
+		pch = strtok(NULL, c);
 	}
 	return split;
 }

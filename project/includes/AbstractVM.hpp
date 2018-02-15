@@ -30,7 +30,7 @@ public:
 	static AbstractVM *getInstance();
 
 	static std::string stringTrim(const std::string &string);
-	static std::vector<std::string> stringSplit(const std::string &string, char c);
+	static std::vector<std::string> stringSplit(const std::string &string, const char *c);
 	static bool isDouble(const std::string &string);
 	static bool isInteger(const std::string &string);
 	static bool isFloat(std::string const &string);
