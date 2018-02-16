@@ -230,7 +230,6 @@ void AbstractVM::push(IOperand *iOperand) {
 }
 
 void AbstractVM::pop(IOperand *iOperand) {
-	//TODO 15 Feb 2018 11:21 think to free
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::pop(IOperand *iOperand)" << std::endl;
 	}
@@ -305,7 +304,13 @@ void AbstractVM::mod(IOperand *iOperand) {
 void AbstractVM::print(IOperand *iOperand) {
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::print(IOperand *iOperand)" << std::endl;
+ 	}
+	if (this->_stack.size() == 0) {
+		throw AbstractVMException(__FUNCTION__, "Stack is empty");
+	} else if (this->_stack.back()->getType() != Int8) {
+		throw AbstractVMException(__FUNCTION__, "Last value on the stack is not Int8");
 	}
+	std::cout << this->_stack.back()->toString() << std::endl;
 }
 
 void AbstractVM::exit(IOperand *iOperand) {
