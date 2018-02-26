@@ -19,22 +19,22 @@
 class CreateOperand {
 
 public:
-	CreateOperand(); // Canonical
-	~CreateOperand(); // Canonical
+	typedef std::vector<const IOperand *(CreateOperand::*)(std::string const &)> VectorOperand;
 
-	IOperand const * createOperand( eOperandType type, std::string const & value ) const;
-	IOperand const * createInt8( std::string const & value ) const;
-	IOperand const * createInt16( std::string const & value ) const;
-	IOperand const * createInt32( std::string const & value ) const;
-	IOperand const * createFloat( std::string const & value ) const;
-	IOperand const * createDouble( std::string const & value ) const;
+	static IOperand const * createOperand( eOperandType type, std::string const & value );
+	static IOperand const * createInt8( std::string const & value );
+	static IOperand const * createInt16( std::string const & value );
+	static IOperand const * createInt32( std::string const & value );
+	static IOperand const * createFloat( std::string const & value );
+	static IOperand const * createDouble( std::string const & value );
 
 private:
+	CreateOperand(); // Canonical
+	~CreateOperand(); // Canonical
 	CreateOperand(CreateOperand const &copy); // Canonical
 	CreateOperand &operator=(CreateOperand const &copy); // Canonical
 
-	typedef std::vector<const IOperand *(CreateOperand::*)(const std::string &) const> VectorOperand;
-	VectorOperand _createPointerTab;
+	static VectorOperand _createPointerTab;
 
 };
 

@@ -13,16 +13,23 @@
 #include "../includes/CreateOperand.hpp"
 #include "../includes/AbstractVM.hpp"
 
+CreateOperand::VectorOperand CreateOperand::_createPointerTab({
+		&CreateOperand::createInt8,
+		&CreateOperand::createInt16,
+		&CreateOperand::createInt32,
+		&CreateOperand::createFloat,
+		&CreateOperand::createDouble });
+
 /* ********************************* CREATORS ********************************* */
 
-IOperand const *CreateOperand::createOperand(eOperandType type, std::string const &value) const {
+IOperand const *CreateOperand::createOperand(eOperandType type, std::string const &value) {
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::createOperand(eOperandType type, std::string const &value)" << std::endl;
 	}
-	return dynamic_cast<IOperand const *>((this->*(this->_createPointerTab[type]))(value));
+	return dynamic_cast<IOperand const *>((CreateOperand::*(CreateOperand::_createPointerTab[type]))(value));
 }
 
-IOperand const *CreateOperand::createInt8(std::string const &value) const {
+IOperand const *CreateOperand::createInt8(std::string const &value) {
 	double v = stoi(value);
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::createInt8(std::string const &value)" << std::endl;
@@ -33,7 +40,7 @@ IOperand const *CreateOperand::createInt8(std::string const &value) const {
 	return new Operand<char>(Int8, static_cast<char>(v));
 }
 
-IOperand const *CreateOperand::createInt16(std::string const &value) const {
+IOperand const *CreateOperand::createInt16(std::string const &value) {
 	double v = stoi(value);
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::createInt16(std::string const &value)" << std::endl;
@@ -44,7 +51,7 @@ IOperand const *CreateOperand::createInt16(std::string const &value) const {
 	return new Operand<short>(Int16, static_cast<short>(stoi(value)));
 }
 
-IOperand const *CreateOperand::createInt32(std::string const &value) const {
+IOperand const *CreateOperand::createInt32(std::string const &value) {
 	double v = stoi(value);
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::createInt32(std::string const &value)" << std::endl;
@@ -55,26 +62,23 @@ IOperand const *CreateOperand::createInt32(std::string const &value) const {
 	return new Operand<int>(Int32, stoi(value));
 }
 
-IOperand const *CreateOperand::createFloat(std::string const &value) const {
+IOperand const *CreateOperand::createFloat(std::string const &value) {
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::createFloat(std::string const &value)" << std::endl;
 	}
 	return new Operand<float>(Float, std::stof(value));
 }
 
-IOperand const *CreateOperand::createDouble(std::string const &value) const {
+IOperand const *CreateOperand::createDouble(std::string const &value) {
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::createDouble(std::string const &value)" << std::endl;
 	}
 	return new Operand<double>(Double, std::stod(value));
 }
 
+/* ********************************* CONSTRUCTORS ********************************* */
+
 CreateOperand::CreateOperand() {
-	this->_createPointerTab.push_back(&CreateOperand::createInt8);
-	this->_createPointerTab.push_back(&CreateOperand::createInt16);
-	this->_createPointerTab.push_back(&CreateOperand::createInt32);
-	this->_createPointerTab.push_back(&CreateOperand::createFloat);
-	this->_createPointerTab.push_back(&CreateOperand::createDouble);
 }
 
 CreateOperand::CreateOperand(CreateOperand const &copy) {

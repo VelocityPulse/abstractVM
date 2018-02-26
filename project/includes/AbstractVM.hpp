@@ -67,7 +67,6 @@ private:
 	static AbstractVM *_singleton;
 	MapCommand _commandMap;
 	std::vector<IOperand*> _stack;
-	CreateOperand operandCreator;
 
 };
 

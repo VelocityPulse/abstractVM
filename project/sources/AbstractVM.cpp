@@ -77,15 +77,15 @@ void AbstractVM::executeCommand(std::string cmd, std::string parameter) {
 		IOperand *iOperand;
 		const char *c_str = parameter.c_str();
 		if (!std::strncmp(c_str, "int8(", 5)) {
-			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Int8, getIntegerParameter(&parameter[5])));
+			iOperand = const_cast<IOperand *>(CreateOperand::createOperand(Int8, getIntegerParameter(&parameter[5])));
 		} else if (!std::strncmp(c_str, "int16(", 6)) {
-			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Int16, getIntegerParameter(&parameter[6])));
+			iOperand = const_cast<IOperand *>(CreateOperand::createOperand(Int16, getIntegerParameter(&parameter[6])));
 		} else if (!std::strncmp(c_str, "int32(", 6)) {
-			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Int32, getIntegerParameter(&parameter[6])));
+			iOperand = const_cast<IOperand *>(CreateOperand::createOperand(Int32, getIntegerParameter(&parameter[6])));
 		} else if (!std::strncmp(c_str, "float(", 6)) {
-			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Float, getFloatParameter(&parameter[6])));
+			iOperand = const_cast<IOperand *>(CreateOperand::createOperand(Float, getFloatParameter(&parameter[6])));
 		} else if (!std::strncmp(c_str, "double(", 7)) {
-			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Double, getDoubleParameter(&parameter[7])));
+			iOperand = const_cast<IOperand *>(CreateOperand::createOperand(Double, getDoubleParameter(&parameter[7])));
 		} else {
 			throw AbstractVMException(__FUNCTION__, "Invalid parameter");
 		}

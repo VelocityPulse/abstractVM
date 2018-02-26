@@ -15,6 +15,7 @@
 
 #include "IOperand.hpp"
 #include "AbstractVMException.hpp"
+#include "CreateOperand.hpp"
 
 extern bool globalDebugFlag;
 
