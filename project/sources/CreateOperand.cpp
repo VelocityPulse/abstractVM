@@ -23,7 +23,7 @@ CreateOperand::VectorOperand CreateOperand::_createPointerTab({
 /* ********************************* CREATORS ********************************* */
 
 IOperand const *CreateOperand::createOperand(eOperandType type, std::string const &value) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::createOperand(eOperandType type, std::string const &value)" << std::endl;
 	}
 	return dynamic_cast<IOperand const *>((*(CreateOperand::_createPointerTab[type]))(value));
@@ -31,7 +31,7 @@ IOperand const *CreateOperand::createOperand(eOperandType type, std::string cons
 
 IOperand const *CreateOperand::createInt8(std::string const &value) {
 	double v = stoi(value);
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::createInt8(std::string const &value)" << std::endl;
 	}
 	if (v > INT8_MAX || v < INT8_MIN) {
@@ -42,7 +42,7 @@ IOperand const *CreateOperand::createInt8(std::string const &value) {
 
 IOperand const *CreateOperand::createInt16(std::string const &value) {
 	double v = stoi(value);
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::createInt16(std::string const &value)" << std::endl;
 	}
 	if (v > INT16_MAX || v < INT16_MIN) {
@@ -53,7 +53,7 @@ IOperand const *CreateOperand::createInt16(std::string const &value) {
 
 IOperand const *CreateOperand::createInt32(std::string const &value) {
 	double v = stoi(value);
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::createInt32(std::string const &value)" << std::endl;
 	}
 	if (v > INT32_MAX || v < INT32_MIN) {
@@ -63,14 +63,14 @@ IOperand const *CreateOperand::createInt32(std::string const &value) {
 }
 
 IOperand const *CreateOperand::createFloat(std::string const &value) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::createFloat(std::string const &value)" << std::endl;
 	}
 	return new Operand<float>(Float, std::stof(value));
 }
 
 IOperand const *CreateOperand::createDouble(std::string const &value) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::createDouble(std::string const &value)" << std::endl;
 	}
 	return new Operand<double>(Double, std::stod(value));

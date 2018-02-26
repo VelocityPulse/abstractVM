@@ -17,7 +17,8 @@
 #include "AbstractVMException.hpp"
 #include "CreateOperand.hpp"
 
-extern bool globalDebugFlag;
+extern bool globalDebugFlagNameFunction;
+extern bool globalDebugFlagInfoMessage;
 
 template<typename T = int>
 class Operand : public IOperand {
@@ -29,7 +30,7 @@ private:
 
 public:
 	Operand<T>(eOperandType type, T value) : _type(type), _value(value) {
-		if (globalDebugFlag) {
+		if (globalDebugFlagInfoMessage) {
 			std::cout << "Operand::Operand<T>(eOperandType " << this->_type << ", T " << toString() << ")" << std::endl;
 		}
 	}
@@ -55,23 +56,98 @@ public:
 		return this->_type;
 	}
 
+	//TODO 26 Feb 2018 02:48 add the overflow and underflow security
+
 	IOperand const *operator+(IOperand const &rhs) const override {
+		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
+
+		switch (biggerType) {
+			case Int8:
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, this->_value + std::stod(rhs.toString())));
+			case Int16:
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, this->_value + std::stod(rhs.toString())));
+			case Int32:
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, this->_value + std::stod(rhs.toString())));
+			case Float:
+				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, this->_value + std::stod(rhs.toString())));
+			case Double:
+				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, this->_value + std::stod(rhs.toString())));
+		}
 		return nullptr;
 	}
 
 	IOperand const *operator-(IOperand const &rhs) const override {
+		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
+
+		switch (biggerType) {
+			case Int8:
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, this->_value - std::stod(rhs.toString())));
+			case Int16:
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, this->_value - std::stod(rhs.toString())));
+			case Int32:
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, this->_value - std::stod(rhs.toString())));
+			case Float:
+				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, this->_value - std::stod(rhs.toString())));
+			case Double:
+				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, this->_value - std::stod(rhs.toString())));
+		}
 		return nullptr;
 	}
 
 	IOperand const *operator*(IOperand const &rhs) const override {
+		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
+
+		switch (biggerType) {
+			case Int8:
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, this->_value * std::stod(rhs.toString())));
+			case Int16:
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, this->_value * std::stod(rhs.toString())));
+			case Int32:
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, this->_value * std::stod(rhs.toString())));
+			case Float:
+				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, this->_value * std::stod(rhs.toString())));
+			case Double:
+				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, this->_value * std::stod(rhs.toString())));
+		}
 		return nullptr;
 	}
 
 	IOperand const *operator/(IOperand const &rhs) const override {
+		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
+
+		switch (biggerType) {
+			case Int8:
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, this->_value / std::stod(rhs.toString())));
+			case Int16:
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, this->_value / std::stod(rhs.toString())));
+			case Int32:
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, this->_value / std::stod(rhs.toString())));
+			case Float:
+				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, this->_value / std::stod(rhs.toString())));
+			case Double:
+				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, this->_value / std::stod(rhs.toString())));
+		}
 		return nullptr;
 	}
 
 	IOperand const *operator%(IOperand const &rhs) const override {
+		if (this->getType() == Double || this->getType() == Float || rhs.getType() == Double || rhs.getType() == Float) {
+			throw AbstractVMException("Modulo with floating number");
+		}
+		if (std::stoi(rhs.toString()) == 0) {
+			throw AbstractVMException("Modulo by 0");
+		}
+		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
+		switch (biggerType) {
+			case Int8:
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
+			case Int16:
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
+			case Int32:
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
+			case Float:break;
+			case Double:break;
+		}
 		return nullptr;
 	}
 
@@ -93,8 +169,6 @@ public:
 				return "double";
 		}
 	}
-
-
 };
 
 #endif //ABSTRACTVM_OPERAND_HPP

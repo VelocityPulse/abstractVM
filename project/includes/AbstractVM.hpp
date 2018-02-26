@@ -23,7 +23,7 @@
 #include "AbstractVMException.hpp"
 #include "CreateOperand.hpp"
 
-extern bool globalDebugFlag;
+extern bool globalDebugFlagNameFunction;
 
 class AbstractVM {
 

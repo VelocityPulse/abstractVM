@@ -31,7 +31,7 @@ AbstractVM::AbstractVM() {
 /* ********************************* PARSING ********************************* */
 
 void AbstractVM::parseCommand(std::string prompt) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::parseCommand(std::string prompt)" << std::endl;
 	}
 
@@ -60,14 +60,14 @@ void AbstractVM::parseCommand(std::string prompt) {
 }
 
 void AbstractVM::executeCommand(std::string cmd) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::executeCommand(std::string)" << std::endl;
 	}
 	(this->*(this->_commandMap[cmd]))(nullptr);
 }
 
 void AbstractVM::executeCommand(std::string cmd, std::string parameter) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::executeCommand(std::string cmd, std::string value)" << std::endl;
 	}
 
@@ -100,7 +100,7 @@ void AbstractVM::executeCommand(std::string cmd, std::string parameter) {
 }
 
 std::string AbstractVM::getIntegerParameter(std::string string) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::getIntegerParameter(std::string const string)" << std::endl;
 	}
 	char *p;
@@ -119,7 +119,7 @@ std::string AbstractVM::getIntegerParameter(std::string string) {
 }
 
 std::string AbstractVM::getFloatParameter(std::string string) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::getFloatParameter(std::string const string)" << std::endl;
 	}
 	char *p;
@@ -141,7 +141,7 @@ std::string AbstractVM::getFloatParameter(std::string string) {
 }
 
 std::string AbstractVM::getDoubleParameter(std::string string) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::getDoubleParameter(std::string string)" << std::endl;
 	}
 	char *p;
@@ -162,14 +162,14 @@ std::string AbstractVM::getDoubleParameter(std::string string) {
 /* ********************************* COMMANDS ********************************* */
 
 void AbstractVM::push(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::push(IOperand *iOperand)" << std::endl;
 	}
 	this->_stack.push_back(iOperand);
 }
 
 void AbstractVM::pop(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::pop(IOperand *iOperand)" << std::endl;
 	}
 	if (this->_stack.size() == 0) {
@@ -181,7 +181,7 @@ void AbstractVM::pop(IOperand *iOperand) {
 }
 
 void AbstractVM::dump(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::dump(IOperand *iOperand)" << std::endl;
 	}
 	if (this->_stack.size() == 0) {
@@ -196,7 +196,7 @@ void AbstractVM::dump(IOperand *iOperand) {
 }
 
 void AbstractVM::assert(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM : assert command" << std::endl;
 	}
 	if (_stack.size() == 0) {
@@ -205,13 +205,13 @@ void AbstractVM::assert(IOperand *iOperand) {
 	IOperand *lastOne = this->_stack.back();
 	if (iOperand->getType() != lastOne->getType() || iOperand->toString() != lastOne->toString()) {
 		throw AbstractVMException(__FUNCTION__, "Value not match with the last on the stack");
-	} else if (globalDebugFlag) {
+	} else if (globalDebugFlagInfoMessage) {
 		std::cout << "Assert success" << std::endl;
 	}
 }
 
 void AbstractVM::add(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::add(IOperand *iOperand)" << std::endl;
 	}
 	if (this->_stack.size() < 2) {
@@ -219,37 +219,79 @@ void AbstractVM::add(IOperand *iOperand) {
 	}
 	IOperand *iOperand1 = this->_stack.back();
 	IOperand *iOperand2 = this->_stack.at(this->_stack.size() - 2);
-
-	eOperandType biggerType = (iOperand1->getPrecision() < iOperand2->getPrecision() ? iOperand1->getType() : iOperand2->getType());
-//	this->_stack.push_back(*iOperand1 + *iOperand2);
+	this->_stack.pop_back();
+	this->_stack.pop_back();
+	this->_stack.push_back(const_cast<IOperand *>(*iOperand1 + *iOperand2));
+	delete iOperand1;
+	delete iOperand2;
 }
 
 void AbstractVM::sub(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::sub(IOperand *iOperand)" << std::endl;
 	}
+	if (this->_stack.size() < 2) {
+		throw AbstractVMException(__FUNCTION__, "Stack size is under 2");
+	}
+	IOperand *iOperand1 = this->_stack.back();
+	IOperand *iOperand2 = this->_stack.at(this->_stack.size() - 2);
+	this->_stack.pop_back();
+	this->_stack.pop_back();
+	this->_stack.push_back(const_cast<IOperand *>(*iOperand1 - *iOperand2));
+	delete iOperand1;
+	delete iOperand2;
 }
 
 void AbstractVM::mul(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::mul(IOperand *iOperand)" << std::endl;
 	}
+	if (this->_stack.size() < 2) {
+		throw AbstractVMException(__FUNCTION__, "Stack size is under 2");
+	}
+	IOperand *iOperand1 = this->_stack.back();
+	IOperand *iOperand2 = this->_stack.at(this->_stack.size() - 2);
+	this->_stack.pop_back();
+	this->_stack.pop_back();
+	this->_stack.push_back(const_cast<IOperand *>(*iOperand1 * *iOperand2));
+	delete iOperand1;
+	delete iOperand2;
 }
 
 void AbstractVM::div(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::div(IOperand *iOperand)" << std::endl;
 	}
+	if (this->_stack.size() < 2) {
+		throw AbstractVMException(__FUNCTION__, "Stack size is under 2");
+	}
+	IOperand *iOperand1 = this->_stack.back();
+	IOperand *iOperand2 = this->_stack.at(this->_stack.size() - 2);
+	this->_stack.pop_back();
+	this->_stack.pop_back();
+	this->_stack.push_back(const_cast<IOperand *>(*iOperand1 / *iOperand2));
+	delete iOperand1;
+	delete iOperand2;
 }
 
 void AbstractVM::mod(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::mod(IOperand *iOperand)" << std::endl;
 	}
+	if (this->_stack.size() < 2) {
+		throw AbstractVMException(__FUNCTION__, "Stack size is under 2");
+	}
+	IOperand *iOperand1 = this->_stack.back();
+	IOperand *iOperand2 = this->_stack.at(this->_stack.size() - 2);
+	this->_stack.pop_back();
+	this->_stack.pop_back();
+	this->_stack.push_back(const_cast<IOperand *>(*iOperand1 % *iOperand2));
+	delete iOperand1;
+	delete iOperand2;
 }
 
 void AbstractVM::print(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::print(IOperand *iOperand)" << std::endl;
  	}
 	if (this->_stack.size() == 0) {
@@ -257,11 +299,12 @@ void AbstractVM::print(IOperand *iOperand) {
 	} else if (this->_stack.back()->getType() != Int8) {
 		throw AbstractVMException(__FUNCTION__, "Last value on the stack is not Int8");
 	}
-	std::cout << this->_stack.back()->toString() << std::endl;
+	char c = static_cast<char>(std::stoi(this->_stack.back()->toString()));
+	std::cout << c << std::endl;
 }
 
 void AbstractVM::exit(IOperand *iOperand) {
-	if (globalDebugFlag) {
+	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::exit(IOperand *iOperand)" << std::endl;
 	}
 	std::exit(0);

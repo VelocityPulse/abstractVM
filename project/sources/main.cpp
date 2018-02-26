@@ -12,7 +12,8 @@
 
 #include "../includes/AbstractVM.hpp"
 
-bool globalDebugFlag = true;
+bool globalDebugFlagNameFunction = false;
+bool globalDebugFlagInfoMessage = true;
 
 void manageStandardEntry(AbstractVM &vm) {
 	std::string line;
