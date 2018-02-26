@@ -19,7 +19,7 @@
 class CreateOperand {
 
 public:
-	typedef std::vector<const IOperand *(CreateOperand::*)(std::string const &)> VectorOperand;
+	typedef std::vector<const IOperand *(*)(std::string const &)> VectorOperand;
 
 	static IOperand const * createOperand( eOperandType type, std::string const & value );
 	static IOperand const * createInt8( std::string const & value );

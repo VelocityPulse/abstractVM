@@ -26,7 +26,7 @@ IOperand const *CreateOperand::createOperand(eOperandType type, std::string cons
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::createOperand(eOperandType type, std::string const &value)" << std::endl;
 	}
-	return dynamic_cast<IOperand const *>((CreateOperand::*(CreateOperand::_createPointerTab[type]))(value));
+	return dynamic_cast<IOperand const *>((*(CreateOperand::_createPointerTab[type]))(value));
 }
 
 IOperand const *CreateOperand::createInt8(std::string const &value) {
