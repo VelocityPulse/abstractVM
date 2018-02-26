@@ -56,22 +56,30 @@ public:
 		return this->_type;
 	}
 
-	//TODO 26 Feb 2018 02:48 add the overflow and underflow security
+//TODO 26 Feb 2018 03:57 make work the throw
 
 	IOperand const *operator+(IOperand const &rhs) const override {
 		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
 
+		double lhsValue = this->_value;
+		double rhsValue = std::stod(rhs.toString());
+
 		switch (biggerType) {
 			case Int8:
-				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, this->_value + std::stod(rhs.toString())));
+				flowCheck<char>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, lhsValue + rhsValue));
 			case Int16:
-				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, this->_value + std::stod(rhs.toString())));
+				flowCheck<short>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, lhsValue + rhsValue));
 			case Int32:
-				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, this->_value + std::stod(rhs.toString())));
+				flowCheck<int>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, lhsValue + rhsValue));
 			case Float:
-				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, this->_value + std::stod(rhs.toString())));
+				flowCheck<float>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, lhsValue + rhsValue));
 			case Double:
-				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, this->_value + std::stod(rhs.toString())));
+				flowCheck<double>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, lhsValue + rhsValue));
 		}
 		return nullptr;
 	}
@@ -79,17 +87,25 @@ public:
 	IOperand const *operator-(IOperand const &rhs) const override {
 		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
 
+		double lhsValue = this->_value;
+		double rhsValue = std::stod(rhs.toString());
+
 		switch (biggerType) {
 			case Int8:
-				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, this->_value - std::stod(rhs.toString())));
+				flowCheck<char>(lhsValue, rhsValue * -1);
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, lhsValue - rhsValue));
 			case Int16:
-				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, this->_value - std::stod(rhs.toString())));
+				flowCheck<short>(lhsValue, rhsValue * -1);
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, lhsValue - rhsValue));
 			case Int32:
-				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, this->_value - std::stod(rhs.toString())));
+				flowCheck<int>(lhsValue, rhsValue * -1);
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, lhsValue - rhsValue));
 			case Float:
-				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, this->_value - std::stod(rhs.toString())));
+				flowCheck<float>(lhsValue, rhsValue * -1);
+				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, lhsValue - rhsValue));
 			case Double:
-				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, this->_value - std::stod(rhs.toString())));
+				flowCheck<double>(lhsValue, rhsValue * -1);
+				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, lhsValue - rhsValue));
 		}
 		return nullptr;
 	}
@@ -97,17 +113,25 @@ public:
 	IOperand const *operator*(IOperand const &rhs) const override {
 		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
 
+		double lhsValue = this->_value;
+		double rhsValue = std::stod(rhs.toString());
+
 		switch (biggerType) {
 			case Int8:
-				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, this->_value * std::stod(rhs.toString())));
+				multFlowCheck<char>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, lhsValue * rhsValue));
 			case Int16:
-				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, this->_value * std::stod(rhs.toString())));
+				multFlowCheck<short>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, lhsValue * rhsValue));
 			case Int32:
-				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, this->_value * std::stod(rhs.toString())));
+				multFlowCheck<int>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, lhsValue * rhsValue));
 			case Float:
-				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, this->_value * std::stod(rhs.toString())));
+				multFlowCheck<float>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, lhsValue * rhsValue));
 			case Double:
-				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, this->_value * std::stod(rhs.toString())));
+				multFlowCheck<double>(lhsValue, rhsValue);
+				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, lhsValue * rhsValue));
 		}
 		return nullptr;
 	}
@@ -115,23 +139,27 @@ public:
 	IOperand const *operator/(IOperand const &rhs) const override {
 		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
 
+		double lhsValue = this->_value;
+		double rhsValue = std::stod(rhs.toString());
+
 		switch (biggerType) {
 			case Int8:
-				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, this->_value / std::stod(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, lhsValue / rhsValue));
 			case Int16:
-				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, this->_value / std::stod(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, lhsValue / rhsValue));
 			case Int32:
-				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, this->_value / std::stod(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, lhsValue / rhsValue));
 			case Float:
-				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, this->_value / std::stod(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<float>(biggerType, lhsValue / rhsValue));
 			case Double:
-				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, this->_value / std::stod(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<double>(biggerType, lhsValue / rhsValue));
 		}
 		return nullptr;
 	}
 
 	IOperand const *operator%(IOperand const &rhs) const override {
-		if (this->getType() == Double || this->getType() == Float || rhs.getType() == Double || rhs.getType() == Float) {
+		if (this->getType() == Double || this->getType() == Float || rhs.getType() == Double ||
+			rhs.getType() == Float) {
 			throw AbstractVMException("Modulo with floating number");
 		}
 		if (std::stoi(rhs.toString()) == 0) {
@@ -145,14 +173,61 @@ public:
 				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
 			case Int32:
 				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
-			case Float:break;
-			case Double:break;
+			case Float:
+				break;
+			case Double:
+				break;
 		}
 		return nullptr;
 	}
 
+//	IOperand const *selectCreateOperand(eOperandType type, double value) const {
+//		switch (type) {
+//			case Int8:
+//				return reinterpret_cast<IOperand *>(new Operand<char>(type, value));
+//			case Int16:
+//				return reinterpret_cast<IOperand *>(new Operand<short>(type, value));
+//			case Int32:
+//				return reinterpret_cast<IOperand *>(new Operand<int>(type, value));
+//			case Float:
+//				return reinterpret_cast<IOperand *>(new Operand<float>(type, value));
+//			case Double:
+//				return reinterpret_cast<IOperand *>(new Operand<double>(type, value));
+//		}
+//		return nullptr;
+//	}
+
 	std::string const &toString(void) const override {
 		return *new std::string(std::to_string(this->_value));
+	}
+
+// max 2147483647
+	template<typename G>
+	void flowCheck(double a, double b) const {
+		G sum = a + b;
+		if ((a < 0) == (b < 0)) {
+			if (a < 0 && sum > b) {
+				throw AbstractVMException::Underflow();
+			} else if (sum < b) {
+				throw AbstractVMException::Overflow();
+			}
+		}
+	}
+
+	template<typename G>
+	void multFlowCheck(double a, double b) const {
+		G max = std::numeric_limits<G>::max();
+		G abs_a = (a < 0 ? a * -1 : a);
+		G abs_b = (b < 0 ? b * -1 : b);
+		if (abs_a > max / abs_b) {
+			if ((a < 0) && (b < 0)) {
+				throw AbstractVMException::Overflow();
+			} else if ((a > 0) && (b > 0)) {
+				throw AbstractVMException::Overflow();
+			} else {
+				throw AbstractVMException::Underflow();
+			}
+		}
 	}
 
 	static std::string stringOfType(eOperandType type) {
