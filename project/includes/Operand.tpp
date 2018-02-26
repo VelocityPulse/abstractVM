@@ -168,11 +168,14 @@ public:
 		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
 		switch (biggerType) {
 			case Int8:
-				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, static_cast<int>(this->_value) %
+																				  std::stoi(rhs.toString())));
 			case Int16:
-				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, static_cast<int>(this->_value) %
+																				   std::stoi(rhs.toString())));
 			case Int32:
-				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, static_cast<int>(this->_value) %
+																				 std::stoi(rhs.toString())));
 			case Float:
 				break;
 			case Double:
@@ -207,9 +210,9 @@ public:
 		G sum = a + b;
 		if ((a < 0) == (b < 0)) {
 			if (a < 0 && sum > b) {
-				throw AbstractVMException::Underflow();
+				throw AbstractVMException("Underflow");
 			} else if (sum < b) {
-				throw AbstractVMException::Overflow();
+				throw AbstractVMException("Overflow");
 			}
 		}
 	}
@@ -221,11 +224,11 @@ public:
 		G abs_b = (b < 0 ? b * -1 : b);
 		if (abs_a > max / abs_b) {
 			if ((a < 0) && (b < 0)) {
-				throw AbstractVMException::Overflow();
+				throw AbstractVMException("Overflow");
 			} else if ((a > 0) && (b > 0)) {
-				throw AbstractVMException::Overflow();
+				throw AbstractVMException("Overflow");
 			} else {
-				throw AbstractVMException::Underflow();
+				throw AbstractVMException("Underflow");
 			}
 		}
 	}

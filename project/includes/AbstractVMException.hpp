@@ -18,25 +18,6 @@
 class AbstractVMException : public std::exception {
 
 public:
-	class Overflow {
-	public:
-		Overflow(); // Canonical
-		~Overflow(); // Canonical
-		Overflow(Overflow const &copy); // Canonical
-		virtual const char *what() const throw();
-	private:
-		Overflow &operator=(Overflow const &copy); // Canonical
-	};
-
-	class Underflow {
-	public:
-		Underflow(); // Canonical
-		~Underflow(); // Canonical
-		Underflow(Underflow const &copy); // Canonical
-		virtual const char *what() const throw();
-	private:
-		Underflow &operator=(Underflow const &copy); // Canonical
-	};
 
 	AbstractVMException(); // Canonical
 	AbstractVMException(std::string const msg);
