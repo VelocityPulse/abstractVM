@@ -15,11 +15,6 @@
 AbstractVM *AbstractVM::_singleton = nullptr;
 
 AbstractVM::AbstractVM() {
-	this->_createPointerTab.push_back(&AbstractVM::createInt8);
-	this->_createPointerTab.push_back(&AbstractVM::createInt16);
-	this->_createPointerTab.push_back(&AbstractVM::createInt32);
-	this->_createPointerTab.push_back(&AbstractVM::createFloat);
-	this->_createPointerTab.push_back(&AbstractVM::createDouble);
 	this->_commandMap["push"] = &AbstractVM::push;
 	this->_commandMap["pop"] = &AbstractVM::pop;
 	this->_commandMap["dump"] = &AbstractVM::dump;
@@ -82,15 +77,15 @@ void AbstractVM::executeCommand(std::string cmd, std::string parameter) {
 		IOperand *iOperand;
 		const char *c_str = parameter.c_str();
 		if (!std::strncmp(c_str, "int8(", 5)) {
-			iOperand = const_cast<IOperand *>(createOperand(Int8, getIntegerParameter(&parameter[5])));
+			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Int8, getIntegerParameter(&parameter[5])));
 		} else if (!std::strncmp(c_str, "int16(", 6)) {
-			iOperand = const_cast<IOperand *>(createOperand(Int16, getIntegerParameter(&parameter[6])));
+			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Int16, getIntegerParameter(&parameter[6])));
 		} else if (!std::strncmp(c_str, "int32(", 6)) {
-			iOperand = const_cast<IOperand *>(createOperand(Int32, getIntegerParameter(&parameter[6])));
+			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Int32, getIntegerParameter(&parameter[6])));
 		} else if (!std::strncmp(c_str, "float(", 6)) {
-			iOperand = const_cast<IOperand *>(createOperand(Float, getFloatParameter(&parameter[6])));
+			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Float, getFloatParameter(&parameter[6])));
 		} else if (!std::strncmp(c_str, "double(", 7)) {
-			iOperand = const_cast<IOperand *>(createOperand(Double, getDoubleParameter(&parameter[7])));
+			iOperand = const_cast<IOperand *>(this->operandCreator.createOperand(Double, getDoubleParameter(&parameter[7])));
 		} else {
 			throw AbstractVMException(__FUNCTION__, "Invalid parameter");
 		}
@@ -164,62 +159,6 @@ std::string AbstractVM::getDoubleParameter(std::string string) {
 	}
 }
 
-/* ********************************* CREATORS ********************************* */
-
-IOperand const *AbstractVM::createOperand(eOperandType type, std::string const &value) const {
-	if (globalDebugFlag) {
-		std::cout << "AbstractVM::createOperand(eOperandType type, std::string const &value)" << std::endl;
-	}
-	return dynamic_cast<IOperand const *>((this->*(this->_createPointerTab[type]))(value));
-}
-
-IOperand const *AbstractVM::createInt8(std::string const &value) const {
-	double v = stoi(value);
-	if (globalDebugFlag) {
-		std::cout << "AbstractVM::createInt8(std::string const &value)" << std::endl;
-	}
-	if (v > INT8_MAX || v < INT8_MIN) {
-		throw AbstractVMException(__FUNCTION__, "Out of range");
-	}
-	return new Operand<char>(Int8, static_cast<char>(v));
-}
-
-IOperand const *AbstractVM::createInt16(std::string const &value) const {
-	double v = stoi(value);
-	if (globalDebugFlag) {
-		std::cout << "AbstractVM::createInt16(std::string const &value)" << std::endl;
-	}
-	if (v > INT16_MAX || v < INT16_MIN) {
-		throw AbstractVMException(__FUNCTION__, "Out of range");
-	}
-	return new Operand<short>(Int16, static_cast<short>(stoi(value)));
-}
-
-IOperand const *AbstractVM::createInt32(std::string const &value) const {
-	double v = stoi(value);
-	if (globalDebugFlag) {
-		std::cout << "AbstractVM::createInt32(std::string const &value)" << std::endl;
-	}
-	if (v > INT32_MAX || v < INT32_MIN) {
-		throw AbstractVMException(__FUNCTION__, "Out of range");
-	}
-	return new Operand<int>(Int32, stoi(value));
-}
-
-IOperand const *AbstractVM::createFloat(std::string const &value) const {
-	if (globalDebugFlag) {
-		std::cout << "AbstractVM::createFloat(std::string const &value)" << std::endl;
-	}
-	return new Operand<float>(Float, std::stof(value));
-}
-
-IOperand const *AbstractVM::createDouble(std::string const &value) const {
-	if (globalDebugFlag) {
-		std::cout << "AbstractVM::createDouble(std::string const &value)" << std::endl;
-	}
-	return new Operand<double>(Double, std::stod(value));
-}
-
 /* ********************************* COMMANDS ********************************* */
 
 void AbstractVM::push(IOperand *iOperand) {
@@ -275,6 +214,14 @@ void AbstractVM::add(IOperand *iOperand) {
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::add(IOperand *iOperand)" << std::endl;
 	}
+	if (this->_stack.size() < 2) {
+		throw AbstractVMException(__FUNCTION__, "Stack size is under 2");
+	}
+	IOperand *iOperand1 = this->_stack.back();
+	IOperand *iOperand2 = this->_stack.at(this->_stack.size() - 2);
+
+	eOperandType biggerType = (iOperand1->getPrecision() < iOperand2->getPrecision() ? iOperand1->getType() : iOperand2->getType());
+//	this->_stack.push_back(*iOperand1 + *iOperand2);
 }
 
 void AbstractVM::sub(IOperand *iOperand) {
@@ -317,6 +264,7 @@ void AbstractVM::exit(IOperand *iOperand) {
 	if (globalDebugFlag) {
 		std::cout << "AbstractVM::exit(IOperand *iOperand)" << std::endl;
 	}
+	std::exit(0);
 }
 
 /* ********************************* COMMONS ********************************* */

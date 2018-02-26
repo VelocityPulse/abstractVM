@@ -6,7 +6,7 @@
 #    By: cchameyr <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/05 10:57:06 by cchameyr          #+#    #+#              #
-#    Updated: 2018/02/12 14:45:39 by cchameyr         ###   ########.fr        #
+#    Updated: 2018/02/26 11:46:25 by cchameyr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ SOURCES_NAME_FOLDER = sources
 
 FILES =				main.cpp \
 					AbstractVM.cpp \
-					AbstractVMException.cpp	
+					AbstractVMException.cpp \
+					CreateOperand.cpp	
 
 SRCS =				$(addprefix $(SOURCES_NAME_FOLDER)/, $(FILES))
 

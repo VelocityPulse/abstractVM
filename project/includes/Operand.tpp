@@ -14,6 +14,7 @@
 #define ABSTRACTVM_OPERAND_HPP
 
 #include "IOperand.hpp"
+#include "AbstractVMException.hpp"
 
 extern bool globalDebugFlag;
 
@@ -46,7 +47,7 @@ public:
 	}
 
 	int getPrecision(void) const override {
-		return this->_type; //TODO 06 Feb 2018 02:53 change this -> refer to IOperand.tpp
+		return this->_type;
 	}
 
 	eOperandType getType(void) const override {
@@ -91,6 +92,8 @@ public:
 				return "double";
 		}
 	}
+
+
 };
 
 #endif //ABSTRACTVM_OPERAND_HPP

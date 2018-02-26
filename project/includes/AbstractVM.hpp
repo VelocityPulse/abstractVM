@@ -21,6 +21,7 @@
 #include "IOperand.hpp"
 #include "Operand.tpp"
 #include "AbstractVMException.hpp"
+#include "CreateOperand.hpp"
 
 extern bool globalDebugFlag;
 
@@ -34,13 +35,6 @@ public:
 	static bool isDouble(const std::string &string);
 	static bool isInteger(const std::string &string);
 	static bool isFloat(std::string const &string);
-
-	IOperand const * createOperand( eOperandType type, std::string const & value ) const;
-	IOperand const * createInt8( std::string const & value ) const;
-	IOperand const * createInt16( std::string const & value ) const;
-	IOperand const * createInt32( std::string const & value ) const;
-	IOperand const * createFloat( std::string const & value ) const;
-	IOperand const * createDouble( std::string const & value ) const;
 
     void parseCommand(std::string prompt);
     void executeCommand(std::string cmd);
@@ -67,14 +61,13 @@ private:
     void print(IOperand *iOperand);
     void exit(IOperand *iOperand);
 
-	typedef std::vector<const IOperand *(AbstractVM::*)(const std::string &) const> VectorOperand;
 	typedef std::map<std::string, void (AbstractVM::*)(IOperand *)> MapCommand;
 	typedef MapCommand::iterator MapCommandIterator;
 
 	static AbstractVM *_singleton;
-	VectorOperand _createPointerTab;
 	MapCommand _commandMap;
 	std::vector<IOperand*> _stack;
+	CreateOperand operandCreator;
 
 };
 
