@@ -15,6 +15,7 @@
 
 #include <vector>
 #include "IOperand.hpp"
+#include "AbstractVM.hpp"
 
 class CreateOperand {
 

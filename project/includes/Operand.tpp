@@ -15,7 +15,7 @@
 
 #include "IOperand.hpp"
 #include "AbstractVMException.hpp"
-#include "CreateOperand.hpp"
+#include "OperandCreator.hpp"
 
 extern bool globalDebugFlagNameFunction;
 extern bool globalDebugFlagInfoMessage;
@@ -55,8 +55,6 @@ public:
 	eOperandType getType(void) const override {
 		return this->_type;
 	}
-
-//TODO 26 Feb 2018 03:57 make work the throw
 
 	IOperand const *operator+(IOperand const &rhs) const override {
 		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
@@ -183,22 +181,6 @@ public:
 		}
 		return nullptr;
 	}
-
-//	IOperand const *selectCreateOperand(eOperandType type, double value) const {
-//		switch (type) {
-//			case Int8:
-//				return reinterpret_cast<IOperand *>(new Operand<char>(type, value));
-//			case Int16:
-//				return reinterpret_cast<IOperand *>(new Operand<short>(type, value));
-//			case Int32:
-//				return reinterpret_cast<IOperand *>(new Operand<int>(type, value));
-//			case Float:
-//				return reinterpret_cast<IOperand *>(new Operand<float>(type, value));
-//			case Double:
-//				return reinterpret_cast<IOperand *>(new Operand<double>(type, value));
-//		}
-//		return nullptr;
-//	}
 
 	std::string const &toString(void) const override {
 		return *new std::string(std::to_string(this->_value));

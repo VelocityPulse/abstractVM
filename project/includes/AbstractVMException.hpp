@@ -15,6 +15,8 @@
 
 #include <iostream>
 
+extern int globalDebugLineRead;
+
 class AbstractVMException : public std::exception {
 
 public:

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/CreateOperand.hpp"
-#include "../includes/AbstractVM.hpp"
+#include "../includes/OperandCreator.hpp"
+
 
 CreateOperand::VectorOperand CreateOperand::_createPointerTab({
 		&CreateOperand::createInt8,

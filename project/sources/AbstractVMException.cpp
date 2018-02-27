@@ -41,10 +41,9 @@ AbstractVMException &AbstractVMException::operator=(AbstractVMException const &c
 }
 
 const char *AbstractVMException::what() const throw() {
-//	return exception::what();
 	if (this->_tag != "") {
-		return std::string("AbstractVM Exception : [" + this->_tag + "] " + this->_msg).c_str();
+		return std::string("AbstractVM Exception : [" + this->_tag + "] " + this->_msg + " [LINE] : " + std::to_string(globalDebugLineRead)).c_str();
 	} else {
-		return std::string("AbstractVM Exception : " + this->_msg).c_str();
+		return std::string("AbstractVM Exception : " + this->_msg + " [LINE] : " + std::to_string(globalDebugLineRead)).c_str();
 	}
 }

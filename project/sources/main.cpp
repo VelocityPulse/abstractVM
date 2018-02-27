@@ -10,45 +10,67 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <fstream>
 #include "../includes/AbstractVM.hpp"
 
 bool globalDebugFlagNameFunction = false;
-bool globalDebugFlagInfoMessage = true;
+bool globalDebugFlagInfoMessage = false;
+int globalDebugLineRead = 0;
 
 void manageStandardEntry(AbstractVM &vm) {
 	std::string line;
 
 	while (std::getline(std::cin, line)) {
+		globalDebugLineRead++;
 		try {
 			line = AbstractVM::stringTrim(line);
 			if (line[0] == ';' &&
-				line[1] == ';') { //TODO 15 Feb 2018 10:31 change this algorithm for comments, refer to subject
+				line[1] == ';') {
 				return;
-			} else if (line[0] != ';') {
+			} else if (line[0] == ';' || line == "") { ;
+			} else {
 				vm.parseCommand(line);
 			}
 		} catch (AbstractVMException &e) {
 			std::cout << e.what() << std::endl;
+			break;
 		}
 	}
 }
 
-int main(int argc, char **argv) {
-
-	AbstractVM *avm = AbstractVM::getInstance();
-	manageStandardEntry(*avm);
-
-//	IOperand const *operand = avm.createOperand(Int16, "2440");
-//	std::cout << "[" + operand->toString() + "]" << std::endl;
-
-//	if (argc == 2) {
-//		std::cout << "arguments" << std::endl;
-//	} else if (argc == 1) {
-//		manageStandardEntry();
-//		std::cout << "standard entry" << std::endl;
-//	} else {
-//		std::cout << "bad entry" << std::endl;
-//	}
-	std::cout << "SUCCESS end of program" << std::endl;
-//	return 1;
+void manageWithArgument(AbstractVM &vm, char *string) {
+	std::string line;
+	std::ifstream file(string);
+	if (file) {
+		while (getline(file, line)) {
+			globalDebugLineRead++;
+			try {
+				line = AbstractVM::stringTrim(line);
+				if (line[0] == ';' &&
+					line[1] == ';') {
+					break;
+				} else if (line[0] == ';' || line == "") { ;
+				} else {
+					vm.parseCommand(line);
+				}
+			} catch (AbstractVMException &e) {
+				std::cout << e.what() << std::endl;
+				break;
+			}
+		}
+		file.close();
+	}
 }
+
+
+int main(int argc, char **argv) {
+	if (argc == 2) {
+		manageWithArgument(*AbstractVM::getInstance(), argv[1]);
+	} else if (argc == 1) {
+		manageStandardEntry(*AbstractVM::getInstance());
+	} else {
+		std::cout << "bad entry" << std::endl;
+	}
+	return 1;
+}
+

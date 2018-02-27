@@ -14,14 +14,13 @@
 #define ABSTRACTVM_ABSTRACTVM_HPP
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <vector>
 #include <map>
 #include "IOperand.hpp"
 #include "Operand.tpp"
 #include "AbstractVMException.hpp"
-#include "CreateOperand.hpp"
+#include "OperandCreator.hpp"
 
 extern bool globalDebugFlagNameFunction;
 
