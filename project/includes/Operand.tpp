@@ -141,6 +141,9 @@ public:
 
 		double lhsValue = this->_value;
 		double rhsValue = std::stod(rhs.toString());
+		if (lhsValue == 0 || rhsValue == 0) {
+			throw AbstractVMException("Div by 0");
+		}
 
 		switch (biggerType) {
 			case Int8:
@@ -168,14 +171,11 @@ public:
 		eOperandType biggerType = (this->getPrecision() > rhs.getPrecision() ? this->getType() : rhs.getType());
 		switch (biggerType) {
 			case Int8:
-				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, static_cast<int>(this->_value) %
-																				  std::stoi(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<char>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
 			case Int16:
-				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, static_cast<int>(this->_value) %
-																				   std::stoi(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<short>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
 			case Int32:
-				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, static_cast<int>(this->_value) %
-																				 std::stoi(rhs.toString())));
+				return reinterpret_cast<IOperand *>(new Operand<int>(biggerType, static_cast<int>(this->_value) % std::stoi(rhs.toString())));
 			case Float:
 				break;
 			case Double:

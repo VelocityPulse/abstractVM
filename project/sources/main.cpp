@@ -69,7 +69,7 @@ void manageWithArgument(AbstractVM &vm, char *string) {
 
 
 int main(int argc, char **argv) {
-	if (argc > 2) {
+	if (argc > 1) {
 		//argv[1] == "-bonus1"
 		if (argc == 3 && strcmp(argv[1], "-bonus1") == 0) {
 			globalDebugContinueWithErrors = true;
@@ -79,11 +79,8 @@ int main(int argc, char **argv) {
 		} else {
 			std::cout << "Too many arguments. [-bonus1] for continue even errors are meet" << std::endl;
 		}
-	} else if (argc == 1) {
-		manageStandardEntry(*AbstractVM::getInstance());
 	} else {
-		std::cout << "bad entry" << std::endl;
-		std::cout << "[-bonus1] for continue even errors are meet" << std::endl;
+		manageStandardEntry(*AbstractVM::getInstance());
 	}
 	return 1;
 }

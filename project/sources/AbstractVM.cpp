@@ -50,7 +50,7 @@ void AbstractVM::parseCommand(std::string prompt) {
 	}
 
 	// calling execute command
-	if (split.size() == 1) {
+	if (split.size() == 1 || (split.size() == 2 && split[1][0] == ';')) {
 		executeCommand(split[0]);
 	} else if (split.size() == 2 || (split.size() > 2 && split[2][0] == ';')) {
 		executeCommand(split[0], split[1]);
