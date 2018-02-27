@@ -12,7 +12,6 @@
 
 #include "../includes/OperandCreator.hpp"
 
-
 CreateOperand::VectorOperand CreateOperand::_createPointerTab({
 		&CreateOperand::createInt8,
 		&CreateOperand::createInt16,

@@ -16,6 +16,7 @@
 bool globalDebugFlagNameFunction = false;
 bool globalDebugFlagInfoMessage = false;
 int globalDebugLineRead = 0;
+bool globalDebugContinueWithErrors = false;
 
 void manageStandardEntry(AbstractVM &vm) {
 	std::string line;
@@ -33,7 +34,9 @@ void manageStandardEntry(AbstractVM &vm) {
 			}
 		} catch (AbstractVMException &e) {
 			std::cout << e.what() << std::endl;
-			break;
+			if (!globalDebugContinueWithErrors) {
+				break;
+			}
 		}
 	}
 }
@@ -55,7 +58,9 @@ void manageWithArgument(AbstractVM &vm, char *string) {
 				}
 			} catch (AbstractVMException &e) {
 				std::cout << e.what() << std::endl;
-				break;
+				if (!globalDebugContinueWithErrors) {
+					break;
+				}
 			}
 		}
 		file.close();
@@ -64,12 +69,21 @@ void manageWithArgument(AbstractVM &vm, char *string) {
 
 
 int main(int argc, char **argv) {
-	if (argc == 2) {
-		manageWithArgument(*AbstractVM::getInstance(), argv[1]);
+	if (argc > 2) {
+		//argv[1] == "-bonus1"
+		if (argc == 3 && strcmp(argv[1], "-bonus1") == 0) {
+			globalDebugContinueWithErrors = true;
+			manageWithArgument(*AbstractVM::getInstance(), argv[2]);
+		} else if (argc == 2) {
+			manageWithArgument(*AbstractVM::getInstance(), argv[1]);
+		} else {
+			std::cout << "Too many arguments. [-bonus1] for continue even errors are meet" << std::endl;
+		}
 	} else if (argc == 1) {
 		manageStandardEntry(*AbstractVM::getInstance());
 	} else {
 		std::cout << "bad entry" << std::endl;
+		std::cout << "[-bonus1] for continue even errors are meet" << std::endl;
 	}
 	return 1;
 }
