@@ -35,7 +35,9 @@ public:
 		}
 	}
 
-	Operand(Operand const &copy) {}  // Canonical
+	Operand(Operand const &copy) {
+		(void)copy;
+	}  // Canonical
 
 	~Operand() {} //Canonical
 

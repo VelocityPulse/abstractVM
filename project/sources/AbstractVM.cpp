@@ -169,6 +169,7 @@ void AbstractVM::push(IOperand *iOperand) {
 }
 
 void AbstractVM::pop(IOperand *iOperand) {
+	(void)iOperand;
 	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::pop(IOperand *iOperand)" << std::endl;
 	}
@@ -181,6 +182,7 @@ void AbstractVM::pop(IOperand *iOperand) {
 }
 
 void AbstractVM::dump(IOperand *iOperand) {
+	(void)iOperand;
 	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::dump(IOperand *iOperand)" << std::endl;
 	}
@@ -211,6 +213,7 @@ void AbstractVM::assert(IOperand *iOperand) {
 }
 
 void AbstractVM::add(IOperand *iOperand) {
+	(void)iOperand;
 	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::add(IOperand *iOperand)" << std::endl;
 	}
@@ -227,6 +230,7 @@ void AbstractVM::add(IOperand *iOperand) {
 }
 
 void AbstractVM::sub(IOperand *iOperand) {
+	(void)iOperand;
 	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::sub(IOperand *iOperand)" << std::endl;
 	}
@@ -243,6 +247,7 @@ void AbstractVM::sub(IOperand *iOperand) {
 }
 
 void AbstractVM::mul(IOperand *iOperand) {
+	(void)iOperand;
 	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::mul(IOperand *iOperand)" << std::endl;
 	}
@@ -259,6 +264,7 @@ void AbstractVM::mul(IOperand *iOperand) {
 }
 
 void AbstractVM::div(IOperand *iOperand) {
+	(void)iOperand;
 	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::div(IOperand *iOperand)" << std::endl;
 	}
@@ -275,6 +281,7 @@ void AbstractVM::div(IOperand *iOperand) {
 }
 
 void AbstractVM::mod(IOperand *iOperand) {
+	(void)iOperand;
 	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::mod(IOperand *iOperand)" << std::endl;
 	}
@@ -291,6 +298,7 @@ void AbstractVM::mod(IOperand *iOperand) {
 }
 
 void AbstractVM::print(IOperand *iOperand) {
+	(void)iOperand;
 	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::print(IOperand *iOperand)" << std::endl;
  	}
@@ -304,6 +312,7 @@ void AbstractVM::print(IOperand *iOperand) {
 }
 
 void AbstractVM::exit(IOperand *iOperand) {
+	(void)iOperand;
 	if (globalDebugFlagNameFunction) {
 		std::cout << "AbstractVM::exit(IOperand *iOperand)" << std::endl;
 	}
